@@ -1,5 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firebase-firestore';
+import 'firebase/auth';
+
 var firebaseConfig = {
     apiKey: "AIzaSyCadmaZPOBM16FPEXV2i8W12fDMHlHdOuY",
     authDomain: "recettes-d514f.firebaseapp.com",
@@ -11,9 +13,9 @@ var firebaseConfig = {
     measurementId: "G-RT0JBBRSNG"
   };
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
   
-
 const db = firebase.firestore();
+const auth = firebase.auth();
 
-export default db;
+export default {db,auth};

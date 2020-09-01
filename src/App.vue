@@ -33,7 +33,7 @@
     </v-app-bar>
     <Drawer/>    
     
-    <v-main class="grey lighten-2">
+    <v-main class="indigo lighten-5">
       <router-view></router-view>
     </v-main> 
   </v-app>
@@ -57,8 +57,15 @@ export default {
       this.$store.commit("toggle_drawer")
     },
     to_presentation(){
-      this.$router.push("/presentation")
+      if (this.$store.state.drawer_sortie){this.$store.commit("toggle_drawer")}
+      this.$router.replace("/presentation")
     }
   }
 };
 </script>
+
+<style  scoped>
+.v-main{
+  background-color: cyan;
+}
+</style>

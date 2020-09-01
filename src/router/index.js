@@ -1,19 +1,19 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Profil from '@/views/Profil.vue'
-import Presentation from '../views/Presentation.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Profil from '@/views/Profil.vue';
+import Presentation from '../views/Presentation.vue';
 import Recette from '../views/Recette.vue'
-import Liste from '../views/Liste.vue'
+import Liste from '../views/Liste.vue';
+import Oublie from '../views/Oublie.vue';
+//import Nouvelle from '../views/Nouvelle.vue'
+import Murs from '../views/Murs.vue';
+import Voir from '../views/Voir.vue';
+import all from '../fb';
 
 Vue.use(VueRouter)
 
   const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+  
   {
     path: '/connexion',
     name: 'Connexion',
@@ -33,7 +33,7 @@ Vue.use(VueRouter)
     component:Presentation  
   },
   {
-    path:'/recette',
+    path:'/recette/:id',
     name:'Recette',
     component:Recette
   },
@@ -41,7 +41,37 @@ Vue.use(VueRouter)
     path:'/mesrecettes',
     name:'ListeRecettes',
     component:Liste
-  }
+  },
+  {
+    path:"/oublie",
+    name:'MdpOublie',
+    component:Oublie
+  },
+  {
+    path:'/nouvelle',
+    name:'Nouvelle',
+    component:() => import('../views/Nouvelle.vue')
+  },
+  {
+    path:'/modifier/:id',
+    name:'Modification',
+    component:() => import('../views/Nouvelle.vue')
+  },
+  {
+    path:'/murs',
+    name:'Murs',
+    component:Murs
+  },
+  {
+    path:'/voir/:id',
+    name:'Voir',
+    component:Voir
+  },
+  {
+    path:'/piqueurderecette/:idpersonne/:idrecette',
+    name:'Piqueur',
+    component:Recette,
+  },
 ]
 
 const router = new VueRouter({
@@ -49,5 +79,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
-export default router
+router.beforeEach((to,from,next)=>{
+  if (!to.name=="Connexion" && !all.auth.currentUser){next('/connexion')}
+  else{next()}
+})
+export default router;
