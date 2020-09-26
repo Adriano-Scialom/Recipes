@@ -24,7 +24,7 @@ export default {
                     {text:"Catégories",route:"/categories",icon:"category"},
                     {text:"Nouvelle recette",route:'/nouvelle',icon:'plus_one'},
                     {text:"Mes recettes",route:"/mesrecettes",icon:"food_bank"},
-                    {text:'Cuisiniers',route:'/murs',icon:'people'}
+                    {text:'Cuisiniers',route:'/murs',icon:'people'},
                     ],
         }
     },

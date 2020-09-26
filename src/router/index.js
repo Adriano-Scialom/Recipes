@@ -5,9 +5,10 @@ import Presentation from '../views/Presentation.vue';
 import Recette from '../views/Recette.vue'
 import Liste from '../views/Liste.vue';
 import Oublie from '../views/Oublie.vue';
-//import Nouvelle from '../views/Nouvelle.vue'
+import Categories from '../views/Categories.vue'
 import Murs from '../views/Murs.vue';
 import Voir from '../views/Voir.vue';
+import ListeCategorie from '../views/ListeCategorie.vue'
 import all from '../fb';
 
 Vue.use(VueRouter)
@@ -71,6 +72,16 @@ Vue.use(VueRouter)
     path:'/piqueurderecette/:idpersonne/:idrecette',
     name:'Piqueur',
     component:Recette,
+  },
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: Categories,
+  },
+  {
+    path:'/categories/:type',
+    name: 'CategoriePrecise',
+    component:ListeCategorie,
   },
 ]
 

@@ -3,43 +3,45 @@
     <v-layout class="mx-2 mb-5" row justify-space-around>
       <v-flex xs12 md10>
         <v-card class="pb-4">
-          <v-card-title class="ml-5 blue--text text-h4 text--lighten-2">Informations générales</v-card-title>
-          <v-card-content>
+          <v-card-title class="ml-3 blue--text text-h4 text--lighten-2">Informations générales</v-card-title>
+          <v-card-text class="special pb-0">
             <v-text-field
-              class="mx-5 py-5 px-5 light-blue lighten-4 rounded"
+              class="blue--text"
               label="Titre"
               v-model="recette.titre"
             ></v-text-field>
-            <v-layout class="ml-0 mr-2" row justify-space-around>
+            <v-layout class="ml-0 mr-2" row>
               <v-flex xs3>
                 <v-text-field
-                  class="ml-5 py-5 px-5 light-blue lighten-4 rounded"
+                  class=""
                   label="Durée"
                   type="number"
                   suffix="min"
                   v-model="recette.duree"
                 ></v-text-field>
               </v-flex>
+              <v-spacer></v-spacer>
               <v-flex xs6>
-                <div class="light-blue mx-3 px-2 pt-3 pb-1 my-1 lighten-4 rounded">
+                <div class="">
                   <div class="blue--text ml-1">Nombre de personnes : {{recette.quantite}}</div>
-                  <v-slider v-model="recette.quantite" min="1" max="12"></v-slider>
+                  <v-slider ticks="always" v-model="recette.quantite" min="1" max="12"></v-slider>
                 </div>
               </v-flex>
             </v-layout>
-          </v-card-content>
-          <v-card-actions>
+            <v-divider  class="grey"></v-divider>
+          </v-card-text>
+          <v-card-actions class="px-4">
             <v-text-field
               :rules="rules"
               :loading="loading"
-              class="mx-3 px-3 pb-3 pt-5 light-blue lighten-4 rounded"
+              class="mt-0"
               label="Adresse URL"
               v-model="url"
             ></v-text-field>
             <v-btn
               text
               @click="rechercher"
-              class="text-subtitle-1 font-weight-medium"
+              class="text-subtitle-2 ml-3 font-weight-medium"
               color="blue"
             >Rechercher recette</v-btn>
           </v-card-actions>
@@ -50,34 +52,33 @@
       <v-flex xs12 md10>
         <v-card>
           <v-card-title class="text-center text-h4 blue--text text--lighten-2">Ingrédients</v-card-title>
-          <v-card-content>
+          <v-card-text>
             <v-list>
               <v-list-item class v-for="ingredient in recette.ingredients" :key="ingredient">
-                <v-list-item-content>
-                  <v-container class="ma-1 light-blue lighten-4 rounded" fluid>
+                <v-list-item-content class="py-1">
                     <v-layout row justify-space-around>
-                      <v-flex xs3 md2 class="px-3">
+                      <v-flex xs3 md2 class="px-1">
                         <v-text-field v-model="ingredient.qte" type="number" label="Quantité"></v-text-field>
                       </v-flex>
-                      <v-flex xs2 md1 class="px-1">
+                      <v-flex xs2 md1 class="px-0">
                         <v-text-field v-model="ingredient.unite" label="Unité"></v-text-field>
                       </v-flex>
-                      <v-flex xs6 md7 class="px-1">
+                      <v-flex xs6 md7 class="px-0">
                         <v-text-field v-model="ingredient.nom" label="Nom"></v-text-field>
                       </v-flex>
                       <v-flex xs1>
-                        <Menu
+                        <Menu class="pt-3"
                           :monter="()=>{let i = recette.ingredients.indexOf(ingredient);if(i>0){recette.ingredients.splice(i,1);recette.ingredients.splice(i-1,0,ingredient)}}"
                           :supprimer="()=>{recette.ingredients.splice(recette.ingredients.indexOf(ingredient),1)}"
                           :baisser="()=>{let i = recette.ingredients.indexOf(ingredient);if(i<recette.ingredients.length-1){recette.ingredients.splice(i,1);recette.ingredients.splice(i+1,0,ingredient)}}"
                         />
                       </v-flex>
                     </v-layout>
-                  </v-container>
+                 
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-          </v-card-content>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click="recette.ingredients.push({ nom: '', unite: '', qte: null })">
@@ -93,11 +94,10 @@
       <v-flex xs12 md10>
         <v-card>
           <v-card-title class="text-center text-h4 blue--text text--lighten-2">Etapes</v-card-title>
-          <v-card-content>
+          <v-card-text>
             <v-list>
-              <v-list-item class v-for="etape in recette.etapes" :key="etape">
-                <v-list-item-content>
-                  <v-container class="ma-1 light-blue lighten-4 rounded" fluid>
+              <v-list-item v-for="etape in recette.etapes" :key="etape">
+                <v-list-item-content class="py-1">
                     <v-layout row justify-space-around>
                       <v-flex xs11 class="px-3">
                         <v-text-field v-model="etape.texte" label="Description"></v-text-field>
@@ -110,11 +110,10 @@
                         />
                       </v-flex>
                     </v-layout>
-                  </v-container>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-          </v-card-content>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click="recette.etapes.push({texte:''})">
@@ -141,6 +140,7 @@
 </template>
 
 <script>
+
 import Menu from "../components/ReordonnerMenu.vue";
 import all from "../fb";
 import firebase from "firebase/app";
@@ -249,3 +249,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.special{
+  background-color: white;
+}
+</style>

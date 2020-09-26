@@ -25,7 +25,7 @@ export default {
     },
     methods:{
         complete(dbProfil){
-            dbProfil.collection("recettes").where("public","==",true).get()
+            dbProfil.collection("recettes").orderBy('titre').where("public","==",true).get()
                 .then(res=>{
                     this.profil.recettes = []
                     res.forEach(recette=>{

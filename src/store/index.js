@@ -14,7 +14,18 @@ export default new Vuex.Store({
     setUid:(state,uid)=>{state.uid = uid;},
     toggle_drawer:state=>{
       state.drawer_sortie = !state.drawer_sortie},
-    setRecettes:(state,recettes)=>{state.recettes = recettes;},
+    setRecettes:(state,recettes)=>{
+      recettes.forEach(recette=>{
+        let position = state.recettes.findIndex(recetteState=>recetteState.id==recette.id);
+        if(position==-1){
+          Vue.set(state.recettes,state.recettes.length,recette)
+        }
+        else{Vue.set(state.recettes,position,recette);}
+      })
+      },
+    supprimerRecette:(state,recette)=>{
+      state.recettes = state.recettes.filter(recetteStore=>recetteStore.id != recette.id);
+    },  
     addRecette:(state,recette) => {state.recettes.push(recette);},
     addRecetteToPerson:(state,{id,recette})=>{
       let personne = state.personnes.find((personne)=>{return personne.id==id});

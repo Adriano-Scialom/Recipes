@@ -17,19 +17,10 @@
           @click="toggle"
         />
 
-        <span  @click="to_presentation"><span class="text-md-h5 text-xs-subtitle-1"> Ricetta AlluScia</span><span class="subtitle">.whatakif</span></span>
+        <span  @click="to_presentation"><span class="text-md-h5 text-xs-subtitle-1">Les carnets d'Adriano</span><span class="subtitle">.whatakif</span></span>
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
     <Drawer/>    
     
@@ -58,7 +49,7 @@ export default {
     },
     to_presentation(){
       if (this.$store.state.drawer_sortie){this.$store.commit("toggle_drawer")}
-      this.$router.replace("/presentation")
+      this.$router.push("/mesrecettes");
     }
   }
 };

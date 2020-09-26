@@ -7,6 +7,7 @@
           v-bind="attrs"
           v-on="on"
           icon
+          class="mt-3"
         >
           <v-icon>expand_more</v-icon>
         </v-btn>

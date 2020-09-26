@@ -1,24 +1,7 @@
-# recettesweb
+# Family Recipes
 
-## Project setup
-```
-npm install
-```
+Familial Recipes-sharing website based on VueJs and Firebase(Firestore, Storage and Authentication).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Recipes can be noted, shared or kept personal. You can add photos to your recipes and copy the recipes of others.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Recipes are also sorted by food category (Meat, Fish, Vegetarian, Starters,...).
