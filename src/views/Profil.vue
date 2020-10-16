@@ -2,13 +2,15 @@
   <div>
     <v-container class="mt-5">
       <v-layout row justify-space-around>
-        <v-flex xs12 md8>
-          <v-card>
+        <v-flex xs10 md8>
+          <v-card v-if='profil'>
             <v-card-title>Profil</v-card-title>
             <v-card-text>
               <v-text-field @keydown="nomChange=true" dense v-model="profil.nom" :rules="[(v)=>v.length>2 || 'Nom trop court',(v)=>/^[a-zA-Z-'\s]{3,}$/.test(v)|| 'Nom non valide']" outlined label="Nom"></v-text-field>
               <v-text-field @keydown="nomChange=true" dense v-model="profil.prenom" :rules="[(v)=>v.length>2 || 'Prénom trop court',(v)=>/^[a-zA-Z-'\s]{3,}$/.test(v)|| 'Prénom non valide']" outlined label="Prenom"></v-text-field>
-              <div class="text-center pa-0 ma-0"><v-btn :disabled="!nomChange" class="text-subtitle-1" text color="blue">Valider</v-btn></div>
+              <div class="text-center pa-0 ma-0"><v-btn :disabled="!nomChange" class="text-subtitle-1" text :color="color">Valider</v-btn></div>
+              <v-select :loading='changementCouleur' item-text="nom" item-value="color" v-model="color"  :items="couleurs" label="Couleur du site" 
+                  :menu-props='{closeOnClick: true,closeOnContentClick: true,disableKeys:true,openOnClick: false,maxHeight:304,"offset-y":true}' ></v-select>
               <v-divider class="mb-3"></v-divider>
               <v-hover v-slot:default="{hover}">
                 <v-img v-if="profil.imageURL" :src="profil.imageURL" contain max-height=200>
@@ -19,7 +21,7 @@
             </v-card-text>
             <v-card-actions>
               <input hidden type="file" v-on:change="ajouterPhoto" ref="inputAjoutPhoto" accept="image/*">
-              <v-btn @click="ouvrirInput" text  color='blue'><span v-if="!profil.imageURL">Ajouter photo de profil</span><span v-else>Remplacer photo de profil</span><v-icon small right>add_a_photo</v-icon></v-btn>
+              <v-btn @click="ouvrirInput" text  :color='color'><span v-if="!profil.imageURL">Ajouter photo de profil</span><span v-else>Remplacer photo de profil</span><v-icon small right>add_a_photo</v-icon></v-btn>
             </v-card-actions>
           </v-card>
           
@@ -47,7 +49,12 @@ export default {
       profil:null,
       nomChange:false,
       file:null,
-    };
+      couleurs: [{nom:"Bleu",color:'blue'},{nom:"Vert",color:'green'},
+          {nom:'Rouge',color:'red'},{nom:'Rose',color:'pink'},{nom:'Violet',color:'purple'},
+          {nom:'Indigo',color:'indigo'},{nom:'Orange',color:'orange'},
+          {nom:'Marron',color:'brown'}],
+      changementCouleur:false,
+    }
   },
 
   methods: {
@@ -84,7 +91,17 @@ export default {
     
   },
   computed: {
-    
+    color:{
+    get:function(){return this.$store.getters.color},
+    set:function(newValue){
+      this.changementCouleur = true;
+      db.collection("users").doc(auth.currentUser.uid).update({'color':newValue})
+      .then(()=>{this.$store.commit("setColor",newValue);
+      this.changementCouleur = false;
+        }
+      )
+    }
+    }
   },
   created() {
     db.collection("users")

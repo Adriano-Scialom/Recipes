@@ -23,6 +23,10 @@ auth.onAuthStateChanged(()=>{
       vuetify,
       render: h => h(App)
     }).$mount('#app')
-    
+    firebase.firestore().collection('users').doc(auth.currentUser.uid).get()
+    .then(snap=>{
+      let data = snap.data();
+      app.$store.commit('setColor',data.color);
+    })
   }
 })

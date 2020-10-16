@@ -2,7 +2,7 @@
     <v-menu offset-y bottom open-on-hover close-on-content-click>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          color="primary"
+          :color="color"
           dark
           v-bind="attrs"
           v-on="on"
@@ -28,6 +28,9 @@
 
 <script>
 export default {
-    props:['supprimer','monter','baisser']
+    props:['supprimer','monter','baisser'],
+    computed:{
+      color(){return this.$store.getters.color},
+    }
 }
 </script>

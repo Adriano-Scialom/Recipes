@@ -2,7 +2,7 @@
     <v-container class="mb-5">
     <v-layout class="ma-3" row justify-space-around>
       <v-flex xs6>
-        <div class="text-center text-h4 blue--text text--ligthen-2">{{"Recettes de "+$route.params.type}}</div>
+        <div :class="['text-center','text-h4',color+'--text','text--ligthen-2']">{{"Recettes de "+$route.params.type}}</div>
       </v-flex>
     </v-layout>
     <v-layout class="mt-5" row justify-space-around>
@@ -21,7 +21,7 @@
                 <v-list-item-title>
                   <v-layout row class="mx-0">
                   <v-flex class="xs-8">
-                  <span>{{recette.titre}}</span>
+                  <span class="text-wrap">{{recette.titre}}</span>
                   </v-flex>
                   <v-flex class="xs-4">
                   <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" readonly dense :value="recette.noteMoyenne"></v-rating></span>
@@ -51,6 +51,7 @@ export default {
     }
   },
   computed: {
+    color(){return this.$store.getters.color},
     recettes() {
       let categorie = this.$route.params.type.charAt(0).toUpperCase() + this.$route.params.type.slice(1)
       return (this.$store.state.mesRecettes+this.$store.state.autresRecettes).filter(recette=>recette.categorie && recette.categorie == categorie);

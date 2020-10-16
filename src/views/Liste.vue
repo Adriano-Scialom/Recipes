@@ -4,7 +4,7 @@
   <v-container class="mb-5">
     <v-layout class="ma-3" row justify-space-around>
       <v-flex xs6>
-        <div class="text-center text-md-h4 text-h5 blue--text text--ligthen-2">Mes recettes</div>
+        <div :class="['text-center','text-md-h4','text-h5',color+'--text','text--ligthen-2']">Mes recettes</div>
       </v-flex>
     </v-layout>
     <v-layout class="mt-5" row justify-space-around>
@@ -66,6 +66,7 @@ export default {
       auth,
       dialog:false,
       recetteDialog:null,
+      
     };
   },
   methods:{
@@ -84,6 +85,7 @@ export default {
     }
   },
   computed: {
+    color(){return this.$store.getters.color},
     recettes() {
       let recettesClassees = [];
       let recettesStore = this.$store.state.mesRecettes;

@@ -20,7 +20,7 @@
                 
                 <v-layout class="mx-1" row >
                   <v-flex xs1 class="pt-1 text-center">1</v-flex>
-                  <v-flex xs10><v-slider ticks="always" v-model="quantite" min="1" max="12"></v-slider></v-flex>
+                  <v-flex xs10><v-slider :color="color" ticks="always" v-model="quantite" min="1" max="12"></v-slider></v-flex>
                   <v-flex xs1 class="pt-1 text-center">12</v-flex>
                 </v-layout>
               </v-card-actions>
@@ -38,7 +38,7 @@
                     Note du cuisinier
                   </v-flex>
                   <v-flex xs7 class="text-right pr-2">
-                   <v-rating readonly v-model="noteCuisinier" half-increments hover dense></v-rating>
+                   <v-rating :color="color" readonly v-model="noteCuisinier" half-increments hover dense></v-rating>
                   </v-flex>
                 </v-layout>
                 <v-layout row class="ml-0 text-body-1">
@@ -46,7 +46,7 @@
                     Ma note
                   </v-flex>
                   <v-flex xs7 class="text-right pr-2">
-                    <v-rating v-model="maNote" half-increments hover dense></v-rating>
+                    <v-rating :color="color" v-model="maNote" half-increments hover dense></v-rating>
                   </v-flex>
                 </v-layout>
                 <v-layout row class="ml-0 text-body-1">
@@ -54,7 +54,7 @@
                     Note moyenne
                   </v-flex>
                   <v-flex xs7 class="text-right pr-2">
-                   <v-rating readonly v-model="noteMoyenne" half-increments hover dense></v-rating>
+                   <v-rating :color="color" readonly v-model="noteMoyenne" half-increments hover dense></v-rating>
                   </v-flex>
                 </v-layout>
                 <v-select v-model="recette.categorie" :readonly="!appartient" :items="categories.map(categorie=>categorie.nom)" @change="()=>{enregistrerModificationRecette('categorie')}"  label="Catégories" 
@@ -86,7 +86,7 @@
               <v-card-actions>
                 <input hidden type="file" v-on:change="inputChange" ref="inputAjoutPhoto" accept="image/*">
                 
-                <v-btn text v-if="appartient" color="blue" @click="ajoutPhoto">Ajouter photo <v-icon right>add_a_photo</v-icon></v-btn>
+                <v-btn text v-if="appartient" :color="color" @click="ajoutPhoto">Ajouter photo <v-icon right>add_a_photo</v-icon></v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -97,8 +97,8 @@
       <v-container class="px-5">
         <v-layout row justify-space-around>
           <v-flex xs12>
-            <v-card class="mb-5">
-              <h2 class="blue--text text-center text-capitalize">{{recette.titre}}</h2>
+            <v-card>
+              <v-card-title :class="[color+'--text','py-0','text-h6','text-md-h4','text-center','text-capitalize']"><span class="text-center">{{recette.titre}}</span></v-card-title>
             </v-card>
           </v-flex>
         </v-layout>
@@ -106,16 +106,15 @@
     </div>
     <div class="droite">
       <v-container class="px-5">
-        
-        <v-layout row class="mt-3" justify-space-around>
+        <v-layout row justify-space-around>
           <v-flex xs12>
             <v-card>
-              <v-card-title class="ml-2 text-h5 blue--text">Ingrédients</v-card-title>
+              <v-card-title :class="['ml-2','text-h5',color+'--text']">Ingrédients</v-card-title>
               <v-divider></v-divider>
               <v-list>
                 <v-list-item v-for="ingredient in recette.ingredients" :key="ingredient.id">
                   <v-list-item-content>
-                    <div class="text-body-1 blue--text text--darken-3">
+                    <div :class="['text-body-1',color+'--text','text--darken-3']">
                       <span v-if="ingredient.qte && ingredient.qte>0">
                         {{Math.round(100*ingredient.qte*quantite/recette.quantite)/100}} {{ingredient.unite}}
                         <span
@@ -133,12 +132,12 @@
         <v-layout row class="mt-3" justify-space-around>
           <v-flex xs12>
             <v-card>
-              <v-card-title class="ml-2 text-h5 blue--text">Etapes</v-card-title>
+              <v-card-title :class="['ml-2','text-h5',color+'--text']">Etapes</v-card-title>
               <v-divider></v-divider>
               <v-list>
                 <v-list-item v-for="etape in recette.etapes" :key="etape.id">
                   <v-list-item-content>
-                    <div class="text-body-1 blue--text text--darken-3">{{etape.texte}}</div>
+                    <div :class="['text-body-1',color+'--text','text--darken-3']">{{etape.texte}}</div>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -148,23 +147,23 @@
         <v-layout row class="mt-3" justify-space-around>
           <v-flex xs12>
             <v-card>
-              <v-card-title class="ml-2 text-h5 blue--text">Commentaires</v-card-title>
+              <v-card-title :class="['ml-2','text-h5',color+'--text']">Commentaires</v-card-title>
               <v-divider></v-divider>
               <v-list>
                 <v-list-item v-for="commentaire in recette.commentaires" :key="commentaire.texte">
                   <v-list-item-icon class="mr-3"><v-avatar v-if="commentaire.imageURL"><v-img :src="commentaire.imageURL"></v-img></v-avatar></v-list-item-icon>
                   <v-list-item-content>
                     <v-layout class="mx-0" row justify-space-between>
-                    <v-flex xs2 class="text-body-2 text-md-body-1">{{commentaire.prenom}} </v-flex>
-                    <v-flex xs9>
-                    <span class="text-body-2 text-md-body-1 blue--text text--darken-3">{{commentaire.texte}}</span>
+                    <v-flex xs4 md2 class="text-body-2 text-md-body-1 pr-1">{{commentaire.prenom}} </v-flex>
+                    <v-flex xs8 md10>
+                    <span :class="['text-body-2','text-md-body-1',color+'--text','text--darken-3']">{{commentaire.texte}}</span>
                     </v-flex>
                     </v-layout>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item><v-text-field v-model="monCommentaire" placeholder="Mon commentaire"></v-text-field>
-                <v-btn icon right color="blue" :disabled="!envoieCommentaireEnabled" @click="envoyerCommentaire"><v-icon>send</v-icon></v-btn>
+                <v-btn icon right :color="color" :disabled="!envoieCommentaireEnabled" @click="envoyerCommentaire"><v-icon>send</v-icon></v-btn>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -197,7 +196,7 @@
 div.contain {
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 45px auto auto;
+  grid-template-rows: auto auto auto;
   height: 90%;
   margin-top: 5px;
 }
@@ -222,7 +221,7 @@ div.droite {
   div.contain {
   display: grid;
   grid-template-columns: min(400px,50%) auto;
-  grid-template-rows: 50px 1fr;
+  grid-template-rows: auto 1fr;
   align-items: stretch;
   justify-items: stretch;
   height: 100%;
@@ -236,13 +235,12 @@ div.gauche {
 div.droite {
   grid-column: 2/3;
   grid-row: 2/3;
-  padding: 10px;
+  padding: 2px 10px;
 }
 div.titre{
   grid-column: 2/3;
   grid-row: 1/2;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 2px 10px;
 }
 }
 </style>
@@ -264,10 +262,12 @@ export default {
       envoieCommentaireEnabled:true,
       quantite: 0,
       imageZoomUrl:null,
-      categories:categories
-    };
+      categories:categories,
+      
+    }
   },
   computed:{
+    color(){return this.$store.getters.color},
     appartient(){return this.$route.name=='Recette'},
     noteMoyenne(){
       if(!this.recette.notes || this.recette.notes.length==0){return 0}

@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
+      :color="color"
       dark
     >
       <div class="d-flex align-center">
@@ -40,9 +40,14 @@ export default {
     Drawer
   },
 
-  data: () => ({
-    //
-  }),
+  data(){
+    return{
+    
+    }
+  },
+  computed:{
+    color(){return this.$store.getters.color},
+  },
   methods:{
     toggle(){
       this.$store.commit("toggle_drawer")

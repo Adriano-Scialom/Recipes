@@ -6,7 +6,7 @@
                     
                     <v-card-title class="info--text text-capitalize">{{personne.nom}} {{personne.prenom}}</v-card-title>
                     <v-img v-if="personne.imageURL" aspect-ratio="1.3" :src="personne.imageURL"></v-img>
-                    <v-card-actions><v-btn text color="blue" router :to="personne.id==auth.currentUser.uid ? '/mesrecettes' : `/voir/${personne.id}`">Accéder aux recettes</v-btn></v-card-actions>
+                    <v-card-actions><v-btn text :color="color" router :to="personne.id==auth.currentUser.uid ? '/mesrecettes' : `/voir/${personne.id}`">Accéder aux recettes</v-btn></v-card-actions>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -21,9 +21,11 @@ import firebase from 'firebase/app';
 import 'firebase/storage';
 export default {
     data(){
-        return {auth}
+        return {auth,
+        }
     },
     computed:{
+        color(){return this.$store.getters.color},
         personnes(){
             return this.$store.state.personnes;
         }

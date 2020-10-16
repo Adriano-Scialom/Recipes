@@ -3,10 +3,10 @@
     <v-layout class="mx-2 mb-5" row justify-space-around>
       <v-flex xs12 md10>
         <v-card class="pb-4">
-          <v-card-title class="ml-3 blue--text text-h4 text--lighten-2">Informations générales</v-card-title>
+          <v-card-title :class="['ml-3',color+'--text','text-h4','text--lighten-2']">Informations générales</v-card-title>
           <v-card-text class="special pb-0">
             <v-text-field
-              class="blue--text"
+              :class="color+'--text'"
               label="Titre"
               v-model="recette.titre"
             ></v-text-field>
@@ -23,7 +23,7 @@
               <v-spacer></v-spacer>
               <v-flex xs6>
                 <div class="">
-                  <div class="blue--text ml-1">Nombre de personnes : {{recette.quantite}}</div>
+                  <div :class="[color+'--text','ml-1']">Nombre de personnes : {{recette.quantite}}</div>
                   <v-slider ticks="always" v-model="recette.quantite" min="1" max="12"></v-slider>
                 </div>
               </v-flex>
@@ -42,7 +42,7 @@
               text
               @click="rechercher"
               class="text-subtitle-2 ml-3 font-weight-medium"
-              color="blue"
+              :color="color"
             >Rechercher recette</v-btn>
           </v-card-actions>
         </v-card>
@@ -51,7 +51,7 @@
     <v-layout class="mx-2" row justify-space-around>
       <v-flex xs12 md10>
         <v-card>
-          <v-card-title class="text-center text-h4 blue--text text--lighten-2">Ingrédients</v-card-title>
+          <v-card-title :class="['text-center','text-h4',color+'--text','text--lighten-2']">Ingrédients</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item class v-for="ingredient in recette.ingredients" :key="ingredient.id">
@@ -93,7 +93,7 @@
     <v-layout class="mt-5 mb-5 mx-2" row justify-space-around>
       <v-flex xs12 md10>
         <v-card>
-          <v-card-title class="text-center text-h4 blue--text text--lighten-2">Etapes</v-card-title>
+          <v-card-title :class="['text-center','text-h4',color+'--text','text--lighten-2']">Etapes</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item v-for="etape in recette.etapes" :key="etape.id">
@@ -173,6 +173,9 @@ export default {
       texteBoutonValider: "Enregistrer Recette",
       loading: false,
     };
+  },
+  computed:{
+    color(){return this.$store.getters.color},
   },
   watch:{
     "$route":"vider"

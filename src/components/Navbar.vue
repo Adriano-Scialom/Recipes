@@ -1,8 +1,8 @@
 <template>
     <nav>
-    <v-navigation-drawer app v-bind:value="sortie" color="#2882f0" class="">
+    <v-navigation-drawer app v-bind:value="sortie" :color="color" class="">
         <v-list>
-            <v-list-item v-for="link in links" :key="link.text" router :to="link.route" @click="clique_lien(link.route)" color="blue">
+            <v-list-item v-for="link in links" :key="link.text" router :to="link.route" @click="clique_lien(link.route)" :color="color">
                 <v-list-item-action>
                     <v-icon class="white--text">{{ link.icon }}</v-icon>
                 </v-list-item-action>
@@ -26,12 +26,14 @@ export default {
                     {text:"Mes recettes",route:"/mesrecettes",icon:"food_bank"},
                     {text:'Cuisiniers',route:'/murs',icon:'people'},
                     ],
+            
         }
     },
     computed:{
         sortie(){
             return this.$store.state.drawer_sortie
-        }
+        },
+        color(){return this.$store.getters.color},
     },
     methods:{
         clique_lien(lien){

@@ -10,8 +10,10 @@ export default new Vuex.Store({
     mesRecettes:[],
     autresRecettes:[],
     personnes:[],
+    color:"green"
   },
   mutations: {
+    setColor:(state,color)=>{state.color=(color || 'blue');},
     setUid:(state,uid)=>{state.uid = uid;},
     toggle_drawer:state=>{
       state.drawer_sortie = !state.drawer_sortie},
@@ -54,6 +56,7 @@ export default new Vuex.Store({
   getters:{
     uid(state){return state.uid},
     recettes(state){return state.mesRecettes},
+    color(state){return state.color},
     getPerson(state){return (id)=>{return state.personnes.find((personne)=>{return personne.id===id;});}}
   },
   modules: {

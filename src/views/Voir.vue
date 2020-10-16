@@ -6,11 +6,11 @@
                     <v-card-title v-if="profil && profil.prenom">Recettes de {{profil.prenom}}</v-card-title>
                     <v-list>
                         <v-list-item v-for="recette in profil.recettes" :key="recette.titre" router :to="'/piqueurderecette/'+profil.id+'/'+recette.id">
-                            <v-list-item-title class="text-capitalize blue--text">{{recette.titre}}</v-list-item-title>
+                            <v-list-item-title :class="['text-capitalize', color+'--text']">{{recette.titre}}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-card>
-                <div v-else class="text-h4 mx-5 my-3 blue--text text--darken-2 text-center">
+                <div v-else :class="['text-h4','mx-5','my-3',color+'--text','text--darken-2','text-center']">
                         Ce cuisinier n'a pas encore de recettes..
                 </div>
                     
@@ -32,6 +32,7 @@ export default {
    
     },
     computed:{
+        color(){return this.$store.getters.color},
         recettes(){
             return this.$store.state.autresRecettes.filter(recette=>recette.cuisinier == this.$route.params.id)
         },

@@ -8,7 +8,8 @@ import Oublie from '../views/Oublie.vue';
 import Categories from '../views/Categories.vue'
 import Murs from '../views/Murs.vue';
 import Voir from '../views/Voir.vue';
-import ListeCategorie from '../views/ListeCategorie.vue'
+import ListeCategorie from '../views/ListeCategorie.vue';
+import Recents from '../views/Recents.vue';
 import all from '../fb';
 
 Vue.use(VueRouter)
@@ -83,6 +84,11 @@ Vue.use(VueRouter)
     name: 'CategoriePrecise',
     component:ListeCategorie,
   },
+  {
+    path:'/',
+    name:'Accueil',
+    component:Recents,
+  }
 ]
 const scroll = (from, to, _)=>{
   console.log(from);

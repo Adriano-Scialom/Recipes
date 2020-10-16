@@ -7,7 +7,7 @@
         <v-layout row justify-space-around>
             <v-flex xs12 md10>
                 <v-card class="mx-3">
-                    <v-card-title class="blue--text text-h5 font-weight-bold ml-5">Mot de passe oublié ?</v-card-title>
+                    <v-card-title :class="[color+'--text','text-h5','font-weight-bold','ml-5']">Mot de passe oublié ?</v-card-title>
                     <v-card-text>
                     <v-text-field class="mx-5" v-model="email" label="Adresse email" outlined :rules="rules"></v-text-field>
                     </v-card-text>
@@ -15,7 +15,7 @@
                         <v-spacer></v-spacer>
                         <v-btn text :disabled="!valid || montreAlert" @click="recuperer">
                             <v-icon left>email</v-icon>
-                            <h3 :class="`text-subheading ${valid ? 'blue--text' : 'grey--text'} `">Récupérer mot de passe par mail</h3></v-btn>
+                            <h3 :class="`text-subheading ${valid ? color+'--text' : 'grey--text'} `">Récupérer mot de passe par mail</h3></v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -41,6 +41,7 @@ export default {
         }
     },
     computed:{
+        color(){return this.$store.getters.color},
         valid(){
             return !!this.email && /^[\w-.]+@[\w-]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$/.test(this.email)
         }

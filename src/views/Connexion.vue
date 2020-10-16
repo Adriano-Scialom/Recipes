@@ -4,13 +4,13 @@
       <v-flex xs10 md6>
         
           <v-card class="pa-5 pt-1">
-            <v-card-title class="blue--text text-center text-h4">Connexion</v-card-title>
+            <v-card-title :class="[color+'--text','text-center','text-h4']">Connexion</v-card-title>
             <v-text-field
                   label="Adresse email"
                   :rules="emailRules"
                   v-model="mail"
                   outlined
-                  class="blue--text"
+                  :class="color+'--text'"
                 ></v-text-field>
 
                 <v-text-field
@@ -64,7 +64,11 @@ export default {
       mail: "",
       motdepasse: "",
       snackOpen:false,
+      
     };
+  },
+  computed:{
+    color(){return this.$store.getters.color},
   },
   methods: {
     connexion() {
