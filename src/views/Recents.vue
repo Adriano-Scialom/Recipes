@@ -25,8 +25,11 @@ export default {
         return{
             uid:auth.currentUser.uid,
             recettes:[],
-            color:'green'
+            
         }
+    },
+    computed:{
+        color(){return this.$store.getters.color},
     },
     methods:{},
     created(){

@@ -256,7 +256,6 @@ import {compression,categories} from '../outils';
 export default {
   data() {
     return {
-      couleur:"green",
       recette: {},
       monCommentaire:"",
       envoieCommentaireEnabled:true,
@@ -313,7 +312,7 @@ export default {
       this.$router.push("/modifier/" + this.recette.id);
     },
     changerNote(){
-      console.log(event);
+      
     },
     changerNoteMoyenne(){
       var dbdoc;
@@ -371,8 +370,7 @@ export default {
       let nomFichier = fichier.name.split(".")[0]+new Date().getTime().toString()+"."+fichier.name.split(".")[1];
       let ref = firebase.storage().ref(auth.currentUser.uid+"/"+this.recette.id+"/"+nomFichier);
       ref.put(fichier)
-      .then((data)=>{
-        console.log(data);
+      .then(()=>{
         ref.getDownloadURL().then(url=>{
           if(this.recette.images){this.recette.images.push({url:url})}
         else{this.recette.images = [{url:url}]}

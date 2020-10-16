@@ -27,9 +27,7 @@ export default {
         color(){return this.$store.getters.color},
     },
     methods:{
-        log(texte){
-            console.log(texte);
-        }
+        
     }
 }
 </script>

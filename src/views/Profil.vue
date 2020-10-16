@@ -49,10 +49,13 @@ export default {
       profil:null,
       nomChange:false,
       file:null,
-      couleurs: [{nom:"Bleu",color:'blue'},{nom:"Vert",color:'green'},
-          {nom:'Rouge',color:'red'},{nom:'Rose',color:'pink'},{nom:'Violet',color:'purple'},
-          {nom:'Indigo',color:'indigo'},{nom:'Orange',color:'orange'},
-          {nom:'Marron',color:'brown'}],
+      couleurs: [
+        {nom:'Ambre',color:'amber'},{nom:'Orange',color:'orange'},{nom:'Rouge',color:'red'},
+        {nom:'Rose',color:'pink'},{nom:'Violet',color:'purple'},{nom:'Violet foncé',color:'deep-purple'},
+        {nom:"Bleu",color:'blue'},{nom:'Indigo',color:'indigo'},{nom:'Anthracite',color:'blue-grey'},
+        {nom:'Vert clair',color:'light-green'},{nom:"Vert",color:'green'},
+        {nom:'Marron',color:'brown'},
+        ],
       changementCouleur:false,
     }
   },

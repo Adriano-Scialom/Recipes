@@ -72,9 +72,9 @@ export default {
   },
   methods: {
     connexion() {
-      console.log("connexion");
+      
       auth.signInWithEmailAndPassword(this.mail,this.motdepasse)
-      .then(credentials=>{console.log(credentials.user.uid);
+      .then(credentials=>{
       this.$store.commit('setUid',credentials.user.uid);
       this.$router.push('/mesrecettes')
       }).catch(()=>this.snackOpen=true)

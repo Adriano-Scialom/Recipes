@@ -21,6 +21,7 @@ export default {
     data(){
         return {
             links:[{text:"Profil", route:"/profil", icon:"person"},
+                    {text:'Recettes récentes',route:'/',icon:'update'},
                     {text:"Catégories",route:"/categories",icon:"category"},
                     {text:"Nouvelle recette",route:'/nouvelle',icon:'plus_one'},
                     {text:"Mes recettes",route:"/mesrecettes",icon:"food_bank"},

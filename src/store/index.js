@@ -10,7 +10,7 @@ export default new Vuex.Store({
     mesRecettes:[],
     autresRecettes:[],
     personnes:[],
-    color:"green"
+    color:"blue"
   },
   mutations: {
     setColor:(state,color)=>{state.color=(color || 'blue');},

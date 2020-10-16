@@ -71,8 +71,6 @@ export default {
   },
   methods:{
     confirmationDelete(recette){
-      console.log(recette);
-      console.log(event);
       event.preventDefault();
       this.recetteDialog = recette;
       this.dialog = true;
