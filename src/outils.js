@@ -27,5 +27,5 @@ export const compression = (file,callback,width=300) =>{
         };
 }
 
-export const categories = [{nom:"Entrée",image:""},{nom:"Viande",image:"./viande.jpg"},{nom:"Poisson",image:""}
-,{nom:"Végétarien",image:""},{nom:"Dessert",image:""}];
+export const categories = [{nom:"Entrée",image:"./entree.jpeg"},{nom:"Viande",image:"./viande.jpeg"},{nom:"Poisson",image:"./poisson.jpg"}
+,{nom:"Végétarien",image:"./vegetarien.jpeg"},{nom:"Dessert",image:"./dessert.jpeg"},{nom:"Boisson",image:"./boisson.jpeg"},{nom:"Plat tune",image:"./tune.jpeg"}];

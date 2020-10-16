@@ -84,14 +84,19 @@ Vue.use(VueRouter)
     component:ListeCategorie,
   },
 ]
-
+const scroll = (from, to, _)=>{
+  console.log(from);
+  console.log(to);
+  console.log(_);
+  return {x:0,y:0}}
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior:scroll
 })
 router.beforeEach((to,from,next)=>{
-  if (!to.name=="Connexion" && !all.auth.currentUser){next('/connexion')}
+  if ((to.name!="Connexion" && to.name!="MdpOublie")&& !all.auth.currentUser){next('/connexion')}
   else{next()}
 })
 export default router;

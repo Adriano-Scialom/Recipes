@@ -54,16 +54,16 @@
           <v-card-title class="text-center text-h4 blue--text text--lighten-2">Ingrédients</v-card-title>
           <v-card-text>
             <v-list>
-              <v-list-item class v-for="ingredient in recette.ingredients" :key="ingredient">
+              <v-list-item class v-for="ingredient in recette.ingredients" :key="ingredient.id">
                 <v-list-item-content class="py-1">
-                    <v-layout row justify-space-around>
+                    <v-layout row justify-space-around class="mx-0">
                       <v-flex xs3 md2 class="px-1">
                         <v-text-field v-model="ingredient.qte" type="number" label="Quantité"></v-text-field>
                       </v-flex>
-                      <v-flex xs2 md1 class="px-0">
+                      <v-flex xs2 md1 class="px-1">
                         <v-text-field v-model="ingredient.unite" label="Unité"></v-text-field>
                       </v-flex>
-                      <v-flex xs6 md7 class="px-0">
+                      <v-flex xs6 md7 class="px-1">
                         <v-text-field v-model="ingredient.nom" label="Nom"></v-text-field>
                       </v-flex>
                       <v-flex xs1>
@@ -81,7 +81,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="recette.ingredients.push({ nom: '', unite: '', qte: null })">
+            <v-btn text @click="recette.ingredients.push({ nom: '', unite: '', qte: null,id:getRandomInt(10000) })">
               Ajouter un ingrédient
               <v-icon right>plus_one</v-icon>
             </v-btn>
@@ -96,7 +96,7 @@
           <v-card-title class="text-center text-h4 blue--text text--lighten-2">Etapes</v-card-title>
           <v-card-text>
             <v-list>
-              <v-list-item v-for="etape in recette.etapes" :key="etape">
+              <v-list-item v-for="etape in recette.etapes" :key="etape.id">
                 <v-list-item-content class="py-1">
                     <v-layout row justify-space-around>
                       <v-flex xs11 class="px-3">
@@ -116,7 +116,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="recette.etapes.push({texte:''})">
+            <v-btn text @click="recette.etapes.push({texte:'',id:getRandomInt(10000)})">
               Ajouter une étape
               <v-icon right>plus_one</v-icon>
             </v-btn>
@@ -159,8 +159,8 @@ export default {
     return {
       recette: {
         titre: "",
-        ingredients: [{ nom: "", unite: "", qte: null }],
-        etapes: [{ texte: "" }],
+        ingredients: [{ nom: "", unite: "", qte: null,id:this.getRandomInt(10000) }],
+        etapes: [{ texte: "",id:this.getRandomInt(10000) }],
         duree: null,
         quantite: 4,
         id: null,
@@ -174,21 +174,30 @@ export default {
       loading: false,
     };
   },
+  watch:{
+    "$route":"vider"
+  },
   methods: {
+    vider(){
+      this.recette = {}
+    },
+    getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    },
     enregistrer() {
       if (this.recette.id) {
         recettes
           .doc(this.recette.id)
           .update(this.recette)
           .then(() => {
-            this.$store.commit("addRecette", this.recette);
+            this.$store.commit("setMesRecettes", [this.recette]);
             this.$router.replace("/recette/" + this.recette.id);
           });
       } else {
         let res = recettes.doc();
+        this.recette.id = res.id;
         res.set(this.recette).then(() => {
-          this.recette.id = res.id;
-          this.$store.commit("addRecette", this.recette);
+          this.$store.commit("setMesRecettes", [this.recette]);
           this.$router.replace("/recette/" + res.id);
         });
       }
@@ -212,40 +221,34 @@ export default {
       }
     },
   },
+
   created() {
     if (this.$route.params.id) {
+      this.texteBoutonValider = "Valider Modifications";
       let id = this.$route.params.id;
-      let recettes = this.$store.state.recettes;
-      if (recettes.length == 0) {
-        if (auth.currentUser) {
-          db.collection("users")
-            .doc(auth.currentUser.uid)
-            .collection("recettes")
-            .doc(id)
-            .get()
-            .then((data) => {
-              this.recette = data.data();
-              this.recette.id = id;
-              this.$store.commit("addRecette", this.recette);
-            })
-            .catch(() => {
-              this.$router.replace("/mesrecettes");
-            });
-        } else {
-          this.$router.replace("/connexion");
-        }
-      } else {
-        recettes.forEach((recette) => {
+      let recettes = this.$store.state.mesRecettes;
+      let trouve = false;
+      recettes.forEach((recette) => {
           if (recette.id === id) {
             this.recette = recette;
+            trouve = true
           }
         });
-        if (this.recette.titre.length < 2) {
-          this.$router.replace("/mesrecettes");
+        if (trouve) {
+          return;
         }
-      }
-      this.texteBoutonValider = "Valider Modifications";
-    }
+        
+        db.collection("users").doc(auth.currentUser.uid).collection("recettes")
+            .doc(id).get().then((data) => {
+              this.recette = data.data();
+              this.recette.id = id;
+              this.$store.commit("setMesRecettes", [this.recette]);
+            })
+            .catch(() => {
+              this.$router.push("/mesrecettes");
+            });
+    } 
+      
   },
 };
 </script>

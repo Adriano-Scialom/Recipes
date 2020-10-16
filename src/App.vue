@@ -6,7 +6,7 @@
       dark
     >
       <div class="d-flex align-center">
-        
+        <a>
         <img
           
           class="shrink mr-2"
@@ -16,8 +16,8 @@
           width="40"
           @click="toggle"
         />
-
-        <span  @click="to_presentation"><span class="text-md-h5 text-xs-subtitle-1">Les carnets d'Adriano</span><span class="subtitle">.whatakif</span></span>
+        </a>
+        <a> <span @click="to_presentation" color="white" class="text-md-h5 white--text text-xs-subtitle-1">Les carnets d'Adriano</span><span class="white--text subtitle">.whatakif</span></a>
       </div>
 
       <v-spacer></v-spacer>

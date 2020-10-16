@@ -3,7 +3,7 @@ import 'firebase/firebase-firestore';
 import 'firebase/auth';
 
 var firebaseConfig = {
-    apiKey: "AIzaSyCadmaZPOBM16FPEXV2i8W12fDMHlHdOuY",
+    apiKey: "",
     authDomain: "recettes-d514f.firebaseapp.com",
     databaseURL: "https://recettes-d514f.firebaseio.com",
     projectId: "recettes-d514f",

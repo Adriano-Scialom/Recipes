@@ -13,14 +13,23 @@
               v-for="recette in recettes"
               :key="recette.id"
               router
-              :to="recette.profil==auth.currentUser.uid ?'/recette/'+recette.id:'/piqueurderecette/'+recette.profil+'/'+recette.id"
+              :to="!recette.cuisinier ?'/recette/'+recette.id:'/piqueurderecette/'+recette.cuisinier+'/'+recette.id"
               two-line
             >
             <v-list-item-avatar v-if="recette.images && recette.images.length>0" size=60><v-img :src="recette.images[0].url" big></v-img></v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>{{recette.titre}}</v-list-item-title>
-                <v-list-item-subtitle v-if="recette.commentaire">{{recette.commentaire}}</v-list-item-subtitle>
-                <span class="text-right" v-if="recette.note">{{recette.note}}/5</span>
+                <v-list-item-title>
+                  <v-layout row class="mx-0">
+                  <v-flex class="xs-8">
+                  <span>{{recette.titre}}</span>
+                  </v-flex>
+                  <v-flex class="xs-4">
+                  <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" readonly dense :value="recette.noteMoyenne"></v-rating></span>
+                  </v-flex>
+                  </v-layout>
+                </v-list-item-title>
+                <v-list-item-subtitle v-if="recette.cuisinier && recette.prenom">{{recette.prenom}}</v-list-item-subtitle>
+                
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -32,40 +41,45 @@
 
 <script>
 import all from "../fb";
-const db = all.db;
-const auth = all.auth;
+const {db,auth} = all;
+
 
 export default {
   data() {
     return {
       auth,
-      
-    };
+    }
   },
   computed: {
     recettes() {
-      return this.$store.state.recettes;
+      let categorie = this.$route.params.type.charAt(0).toUpperCase() + this.$route.params.type.slice(1)
+      return (this.$store.state.mesRecettes+this.$store.state.autresRecettes).filter(recette=>recette.categorie && recette.categorie == categorie);
     },
-    uid() {
-      return this.$store.state.uid;
-    },
+   
   },
   created() {
-    if(this.$route.name=="CategoriePrecise"){
       let categorie = this.$route.params.type.charAt(0).toUpperCase() + this.$route.params.type.slice(1)
+      
       db.collectionGroup("recettes").where("public","==",true).where("categorie","==",categorie).orderBy('titre')
       .get()
       .then(snap=>{
-        var recettes_recus = [];
+        let mesRecettes = [];
+        let autresRecettes = [];
         snap.forEach(doc=>{
           let r = doc.data();
           r.id = doc.id;
-          r.profil = doc.ref.parent.parent.id;
-          recettes_recus.push(r);
+          let cuisinier = doc.ref.parent.parent.id;
+          if(cuisinier===auth.currentUser.uid)
+            mesRecettes.push(r);
+          else{
+            r.cuisinier = cuisinier;
+            autresRecettes.push(r);
+          }
         })
-        this.$store.commit("setRecettes", recettes_recus);
+        this.$store.commit("setMesRecettes", mesRecettes);
+        this.$store.commit("setAutresRecettes",autresRecettes);
       })
-    }
+    
   },
 };
 

@@ -9,7 +9,7 @@
       </div>
     </v-overlay>
     <div class="gauche">
-      <v-container>
+      <v-container class="px-5">
         <v-layout row wrap>
           <v-flex xs12>
             <v-card v-if="recette.quantite">
@@ -27,7 +27,7 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-layout row class="mt-5">
+        <v-layout row class="mt-3">
           <v-flex xs12>
             <v-card>
               <v-card-title>Informations complémentaires</v-card-title>
@@ -46,7 +46,7 @@
                     Ma note
                   </v-flex>
                   <v-flex xs7 class="text-right pr-2">
-                    <v-rating v-model="maNote"  half-increments hover dense></v-rating>
+                    <v-rating v-model="maNote" half-increments hover dense></v-rating>
                   </v-flex>
                 </v-layout>
                 <v-layout row class="ml-0 text-body-1">
@@ -57,13 +57,13 @@
                    <v-rating readonly v-model="noteMoyenne" half-increments hover dense></v-rating>
                   </v-flex>
                 </v-layout>
-                <v-select v-model="recette.categorie" :items="categories.map(categorie=>categorie.nom)" @change="()=>{enregistrerModificationRecette('categorie')}"  label="Catégories" 
-                  :menu-props='{closeOnClick: true,closeOnContentClick: true,disableKeys:true,openOnClick: false,maxHeight:304,"offset-y":true}'></v-select>  
+                <v-select v-model="recette.categorie" :readonly="!appartient" :items="categories.map(categorie=>categorie.nom)" @change="()=>{enregistrerModificationRecette('categorie')}"  label="Catégories" 
+                  :menu-props='{closeOnClick: true,closeOnContentClick: true,disableKeys:true,openOnClick: false,maxHeight:304,"offset-y":true}' ></v-select>  
               </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
-        <v-layout row class="mt-5">
+        <v-layout row class="mt-3">
           <v-flex xs12>
             <v-card>
               <v-card-title>Photos</v-card-title>
@@ -93,28 +93,27 @@
         </v-layout>
       </v-container>
     </div>
-
-    <div class="droite">
-      <v-container>
+    <div class="titre">
+      <v-container class="px-5">
         <v-layout row justify-space-around>
-          <v-flex>
+          <v-flex xs12>
             <v-card class="mb-5">
               <h2 class="blue--text text-center text-capitalize">{{recette.titre}}</h2>
             </v-card>
           </v-flex>
         </v-layout>
-        <v-layout row justify-space-around>
-          <v-flex xs12>
-            <v-card class="mb-2">
-              <h2 class="ml-3 blue--text ">Ingrédients</h2>
-            </v-card>
-          </v-flex>
-        </v-layout>
-        <v-layout row class="mt-2" justify-space-around>
+      </v-container>
+    </div>
+    <div class="droite">
+      <v-container class="px-5">
+        
+        <v-layout row class="mt-3" justify-space-around>
           <v-flex xs12>
             <v-card>
+              <v-card-title class="ml-2 text-h5 blue--text">Ingrédients</v-card-title>
+              <v-divider></v-divider>
               <v-list>
-                <v-list-item v-for="ingredient in recette.ingredients" :key="ingredient.nom">
+                <v-list-item v-for="ingredient in recette.ingredients" :key="ingredient.id">
                   <v-list-item-content>
                     <div class="text-body-1 blue--text text--darken-3">
                       <span v-if="ingredient.qte && ingredient.qte>0">
@@ -131,18 +130,13 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-layout row class="mt-5" justify-space-around>
-          <v-flex xs12>
-            <v-card class="mb-2">
-              <h2 class="ml-2 blue--text text--lighten-1">Etapes</h2>
-            </v-card>
-          </v-flex>
-        </v-layout>
-        <v-layout row class="mt-2" justify-space-around>
+        <v-layout row class="mt-3" justify-space-around>
           <v-flex xs12>
             <v-card>
+              <v-card-title class="ml-2 text-h5 blue--text">Etapes</v-card-title>
+              <v-divider></v-divider>
               <v-list>
-                <v-list-item v-for="etape in recette.etapes" :key="etape.nom">
+                <v-list-item v-for="etape in recette.etapes" :key="etape.id">
                   <v-list-item-content>
                     <div class="text-body-1 blue--text text--darken-3">{{etape.texte}}</div>
                   </v-list-item-content>
@@ -151,8 +145,33 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-layout row justify-space-around>
-          <v-flex xs12 class="mt-5">
+        <v-layout row class="mt-3" justify-space-around>
+          <v-flex xs12>
+            <v-card>
+              <v-card-title class="ml-2 text-h5 blue--text">Commentaires</v-card-title>
+              <v-divider></v-divider>
+              <v-list>
+                <v-list-item v-for="commentaire in recette.commentaires" :key="commentaire.texte">
+                  <v-list-item-icon class="mr-3"><v-avatar v-if="commentaire.imageURL"><v-img :src="commentaire.imageURL"></v-img></v-avatar></v-list-item-icon>
+                  <v-list-item-content>
+                    <v-layout class="mx-0" row justify-space-between>
+                    <v-flex xs2 class="text-body-2 text-md-body-1">{{commentaire.prenom}} </v-flex>
+                    <v-flex xs9>
+                    <span class="text-body-2 text-md-body-1 blue--text text--darken-3">{{commentaire.texte}}</span>
+                    </v-flex>
+                    </v-layout>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item><v-text-field v-model="monCommentaire" placeholder="Mon commentaire"></v-text-field>
+                <v-btn icon right color="blue" :disabled="!envoieCommentaireEnabled" @click="envoyerCommentaire"><v-icon>send</v-icon></v-btn>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-layout class="mt-3" row justify-space-around>
+          <v-flex xs12>
             <div class="text-center">
               <v-btn
                 v-if="appartient"
@@ -177,8 +196,33 @@
 <style scoped>
 div.contain {
   display: grid;
-  grid-template-columns: 400px auto;
-  grid-template-rows: 1fr;
+  grid-template-columns: auto;
+  grid-template-rows: 45px auto auto;
+  height: 90%;
+  margin-top: 5px;
+}
+div.titre{
+  grid-column: 1/2;
+  grid-row: 1/2;
+  padding: 5px;
+}
+div.gauche {
+  grid-column: 1/2;
+  grid-row: 2/3;
+  padding: 5px;
+  padding-bottom:0px;
+}
+div.droite {
+  grid-column: 1/2;
+  grid-row: 3/4;
+  padding: 5px;
+  padding-top:0px;
+}
+@media screen and (min-width:700px) {
+  div.contain {
+  display: grid;
+  grid-template-columns: min(400px,50%) auto;
+  grid-template-rows: 50px 1fr;
   align-items: stretch;
   justify-items: stretch;
   height: 100%;
@@ -186,13 +230,20 @@ div.contain {
 }
 div.gauche {
   grid-column: 1/2;
-  grid-row: 1/2;
+  grid-row: 1/3;
   padding: 10px;
 }
 div.droite {
   grid-column: 2/3;
+  grid-row: 2/3;
+  padding: 10px;
+}
+div.titre{
+  grid-column: 2/3;
   grid-row: 1/2;
   padding: 10px;
+  margin-bottom: 15px;
+}
 }
 </style>
 
@@ -207,7 +258,10 @@ import {compression,categories} from '../outils';
 export default {
   data() {
     return {
+      couleur:"green",
       recette: {},
+      monCommentaire:"",
+      envoieCommentaireEnabled:true,
       quantite: 0,
       imageZoomUrl:null,
       categories:categories
@@ -218,24 +272,30 @@ export default {
     noteMoyenne(){
       if(!this.recette.notes || this.recette.notes.length==0){return 0}
       else{
-        let notes = this.recette.notes.map(note=>note.valeur);
-        return notes.reduce((previous, current) => current += previous)/notes.length;
+        return this.recette.notes.reduce((previous, current) => current.valeur + previous,0)/this.recette.notes.length;
       }
     },
     maNote:{
       get:function(){
       if(!this.recette.notes || this.recette.notes.length==0){return 0}
-      else{return this.recette.notes.find(note=>note.id==auth.currentUser.uid).valeur;}
+      else{let note =  this.recette.notes.find(note=>note.id==auth.currentUser.uid);
+      if(note)
+      return note.valeur;
+      else
+      return 0;}
       },
       set:function(newValue){
-        console.log(newValue);
-        if (!this.recette.notes){this.$set(this.recette,'notes',[{valeur:newValue,id:auth.currentUser.uid}]);return;} 
+        
+        if (!this.recette.notes){this.$set(this.recette,'notes',[{valeur:newValue,id:auth.currentUser.uid}]);} 
+        else
         if(!this.recette.notes.find(note=>note.id==auth.currentUser.uid)){
           this.$set(this.recette.notes,this.recette.notes.length,{valeur:newValue,id:auth.currentUser.uid});
-          return;
+          
         }
+        else
         this.$set(this.recette.notes,this.recette.notes.findIndex(note=>note.id==auth.currentUser.uid),{valeur:newValue,id:auth.currentUser.uid});
         this.enregistrerModificationRecette('notes');
+        this.changerNoteMoyenne();
       }
     },
     noteCuisinier(){
@@ -245,12 +305,26 @@ export default {
       return note.valeur;
     }
   },
+  watch:{
+    //'noteMoyenne':'moyenne'
+  },
   methods: {
     modifier() {
       this.$router.push("/modifier/" + this.recette.id);
     },
     changerNote(){
       console.log(event);
+    },
+    changerNoteMoyenne(){
+      var dbdoc;
+      if(this.appartient){
+        dbdoc = db.collection("users").doc(auth.currentUser.uid)
+        .collection("recettes").doc(this.recette.id)}
+      else{
+        dbdoc = db.collection("users").doc(this.$route.params.idpersonne)
+        .collection("recettes").doc(this.recette.id);}
+        
+      dbdoc.update({noteMoyenne:this.noteMoyenne}) 
     },
     copier() {
       if (this.$route.params.idpersonne != auth.currentUser.uid) {
@@ -267,6 +341,23 @@ export default {
       this.recette.images.splice(this.recette.images.indexOf(image),1);
       this.enregistrerModificationRecette('images');
       storage().refFromURL(image.url).delete();
+    },
+    envoyerCommentaire(){
+      this.envoieCommentaireEnabled = false;
+      setTimeout(()=>{this.envoieCommentaireEnabled=true},6000);
+      
+      db.collection("users").doc(auth.currentUser.uid)
+      .get().then(data=>{
+        let prenom = data.data().prenom;
+        let imageURL = data.data().imageURL;
+        let commentaire = {texte:this.monCommentaire,prenom,imageURL};
+        if (this.recette.commentaires){this.$set(this.recette.commentaires,this.recette.commentaires.length,commentaire);}
+        else{this.recette.commentaires=[commentaire];}
+        this.enregistrerModificationRecette("commentaires");
+        this.envoieCommentaireEnabled = true;
+        this.monCommentaire = "";
+      })
+      
     },
     ajoutPhoto(){
       let input = this.$refs.inputAjoutPhoto;
@@ -293,9 +384,13 @@ export default {
         })   
       },
       enregistrerModificationRecette(field){
-        console.log('field',field);
-        let dbdoc = db.collection("users").doc(auth.currentUser.uid)
-        .collection("recettes").doc(this.recette.id)
+        var dbdoc;
+        if(this.appartient){
+          dbdoc = db.collection("users").doc(auth.currentUser.uid)
+        .collection("recettes").doc(this.recette.id)}
+        else{
+          dbdoc = db.collection("users").doc(this.$route.params.idpersonne)
+        .collection("recettes").doc(this.recette.id);}
         if(field){
           let obj = {};
           obj[field] = this.recette[field];
@@ -307,63 +402,57 @@ export default {
   created() {
     if (this.appartient) {
       let id = this.$route.params.id;
-      let recettes = this.$store.state.recettes;
-      if (recettes.length == 0) {
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .collection("recettes")
-          .doc(id)
-          .get()
-          .then((data) => {
-            this.recette = data.data();
-            this.recette.id = id;
-            this.quantite = this.recette.quantite;
-            this.$store.commit("addRecette", this.recette);
-          })
-          .catch(() => {
-            this.$router.replace("/mesrecettes");
-          });
-      } else {
-        recettes.forEach((recette) => {
+      let recettes = this.$store.state.mesRecettes;
+      let trouve = false;
+      recettes.forEach((recette) => {
           if (recette.id === id) {
             this.recette = recette;
             this.quantite = recette.quantite;
+            trouve = true
           }
         });
-        if (!this.recette.etapes) {
-          this.$router.replace("/mesrecettes");
+        if (trouve) {
+          return;
         }
+        
+        db.collection("users").doc(auth.currentUser.uid).collection("recettes")
+            .doc(id).get().then((data) => {
+              this.recette = data.data();
+              this.recette.id = id;
+              this.$store.commit("setMesRecettes", [this.recette]);
+            })
+            .catch(() => {
+              this.$router.push("/mesrecettes");
+            });
+      
+      
+    } 
+    else {
+      let idpersonne = this.$route.params.idpersonne;
+      let idrecette = this.$route.params.idrecette;
+      let autresRecettes = this.$store.state.autresRecettes;
+      let recette = autresRecettes.find(recette=>recette.id==idrecette);
+      if(recette){
+        this.recette = recette;
+        this.recette.quantite = this.recette.quantite || 4;
+        this.quantite = this.recette.quantite;
+        return;  
       }
-    } else {
-      let params = this.$route.params;
-      let personne = this.$store.state.personnes.filter((personne) => {
-        return personne.id == params.idpersonne;
-      })[0];
-      if (personne) {
-        let recette = personne.recettes.filter((recette) => {
-          return recette.id === params.idrecette;
-        })[0];
-        if (recette) {
-          recette.id = params.idrecette;
-          this.recette = recette;
-          this.recette.quantite = this.recette.quantite || 4;
-          this.quantite = this.recette.quantite;
-        }
-      }
-      if (!this.recette.titre) {
-        db.collection("users")
-          .doc(params.idpersonne)
-          .collection("recettes")
-          .doc(params.idrecette)
-          .get()
-          .then((res) => {
+      db.collection("users")
+        .doc(idpersonne)
+        .collection("recettes")
+        .doc(idrecette)
+        .get()
+        .then((res) => {
             let recette = res.data();
             recette.id = res.id;
+            recette.cuisinier = idpersonne;
+            recette.quantite  = recette.quantite || 4;
             this.recette = recette;
-            this.recette.quantite = this.recette.quantite || 4;
             this.quantite = recette.quantite;
-          });
-      }
+            this.$store.commit("setAutresRecettes",[recette]);
+        });
+      
     }
   },
   

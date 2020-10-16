@@ -1,12 +1,12 @@
 <template>
     <v-container>
-        <v-layout row wrap>
-            <v-flex xs6 md4 v-for="personne in personnes" :key="personne.id">
+        <v-layout justify-space-between row wrap>
+            <v-flex xs12 md4 v-for="personne in personnes" :key="personne.id">
                 <v-card class="ma-2">
                     
                     <v-card-title class="info--text text-capitalize">{{personne.nom}} {{personne.prenom}}</v-card-title>
                     <v-img v-if="personne.imageURL" aspect-ratio="1.3" :src="personne.imageURL"></v-img>
-                    <v-card-actions><v-btn text color="blue" router :to="`/voir/${personne.id}`">Accéder aux recettes</v-btn></v-card-actions>
+                    <v-card-actions><v-btn text color="blue" router :to="personne.id==auth.currentUser.uid ? '/mesrecettes' : `/voir/${personne.id}`">Accéder aux recettes</v-btn></v-card-actions>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -15,13 +15,13 @@
 
 <script>
 import all from '../fb';
-//const auth = all.auth;
+const auth = all.auth;
 const db = all.db;
 import firebase from 'firebase/app';
 import 'firebase/storage';
 export default {
     data(){
-        return {}
+        return {auth}
     },
     computed:{
         personnes(){
