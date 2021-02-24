@@ -10,6 +10,7 @@ import Murs from '../views/Murs.vue';
 import Voir from '../views/Voir.vue';
 import ListeCategorie from '../views/ListeCategorie.vue';
 import Recents from '../views/Recents.vue';
+import Courses from '../views/Courses.vue';
 import all from '../fb';
 
 Vue.use(VueRouter)
@@ -88,7 +89,12 @@ Vue.use(VueRouter)
     path:'/',
     name:'Accueil',
     component:Recents,
-  }
+  },
+  {
+    path:'/listedecourses',
+    name:'Courses',
+    component:Courses
+  },
 ]
 const scroll = (from, to, _)=>{
   console.log(from);

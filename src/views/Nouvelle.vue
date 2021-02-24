@@ -1,32 +1,46 @@
 <template>
+  
   <v-container>
+    <v-snackbar multi-line app color="error" top v-model="erreur">Le site de votre recette n'est pas encore supporté, n'hésitez pas à m'envoyer un message</v-snackbar>
     <v-layout class="mx-2 mb-5" row justify-space-around>
       <v-flex xs12 md10>
         <v-card class="pb-4">
-          <v-card-title :class="['ml-3',color+'--text','text-h4','text--lighten-2']">Informations générales</v-card-title>
+          <v-card-title :class="['ml-3','ml-md-5',color+'--text','text-h5','text-md-h4','text--lighten-2']">Informations générales</v-card-title>
           <v-card-text class="special pb-0">
             <v-text-field
               :class="color+'--text'"
               label="Titre"
               v-model="recette.titre"
             ></v-text-field>
-            <v-layout class="ml-0 mr-2" row>
-              <v-flex xs3>
+            <v-layout class="ml-0 mr-2" row wrap>
+              <v-flex xs6 md3>
                 <v-text-field
-                  class=""
-                  label="Durée"
+                  class="pr-3"
+                  label="Préparation"
                   type="number"
                   suffix="min"
-                  v-model="recette.duree"
+                  v-model="recette.dureePreparation"
                 ></v-text-field>
               </v-flex>
-              <v-spacer></v-spacer>
-              <v-flex xs6>
+              <v-flex xs6 md3>
+                <v-text-field
+                  class="pr-3"
+                  label="Cuisson"
+                  type="number"
+                  suffix="min"
+                  v-model="recette.dureeCuisson"
+                ></v-text-field>
+              </v-flex>
+              
+              <v-flex xs6 class="pl-md-1">
                 <div class="">
-                  <div :class="[color+'--text','ml-1']">Nombre de personnes : {{recette.quantite}}</div>
+                  <div :class="['ml-1']">Nombre de personnes : {{recette.quantite}}</div>
                   <v-slider ticks="always" v-model="recette.quantite" min="1" max="12"></v-slider>
                 </div>
               </v-flex>
+              <v-flex xs6><v-switch v-model="recette.public" label="Recette publique"></v-switch></v-flex>
+              <v-flex xs6><v-select v-model="recette.categorie" :items="categories.map(categorie=>categorie.nom)" label="Catégories" 
+                  :menu-props='{closeOnClick: true,closeOnContentClick: true,disableKeys:true,openOnClick: false,maxHeight:304,"offset-y":true}' ></v-select></v-flex>
             </v-layout>
             <v-divider  class="grey"></v-divider>
           </v-card-text>
@@ -51,19 +65,19 @@
     <v-layout class="mx-2" row justify-space-around>
       <v-flex xs12 md10>
         <v-card>
-          <v-card-title :class="['text-center','text-h4',color+'--text','text--lighten-2']">Ingrédients</v-card-title>
-          <v-card-text>
+          <v-card-title :class="['ml-3','ml-md-5','text-h5','text-md-h4',color+'--text','text--lighten-2']">Ingrédients</v-card-title>
+          <v-card-text class="px-1 pl-md-4 pr-md-0 pb-0">
             <v-list>
-              <v-list-item class v-for="ingredient in recette.ingredients" :key="ingredient.id">
+              <v-list-item class="pr-md-0" v-for="ingredient in recette.ingredients" :key="ingredient.id">
                 <v-list-item-content class="py-1">
                     <v-layout row justify-space-around class="mx-0">
                       <v-flex xs3 md2 class="px-1">
                         <v-text-field v-model="ingredient.qte" type="number" label="Quantité"></v-text-field>
                       </v-flex>
-                      <v-flex xs2 md1 class="px-1">
+                      <v-flex xs3 md2 class="px-1">
                         <v-text-field v-model="ingredient.unite" label="Unité"></v-text-field>
                       </v-flex>
-                      <v-flex xs6 md7 class="px-1">
+                      <v-flex xs5 md7 class="px-1">
                         <v-text-field v-model="ingredient.nom" label="Nom"></v-text-field>
                       </v-flex>
                       <v-flex xs1>
@@ -93,14 +107,14 @@
     <v-layout class="mt-5 mb-5 mx-2" row justify-space-around>
       <v-flex xs12 md10>
         <v-card>
-          <v-card-title :class="['text-center','text-h4',color+'--text','text--lighten-2']">Etapes</v-card-title>
-          <v-card-text>
+          <v-card-title :class="['ml-3','ml-md-5','text-h5','text-md-h4',color+'--text','text--lighten-2']">Etapes</v-card-title>
+          <v-card-text class="px-1 pl-md-4 pr-md-0 pb-0">
             <v-list>
-              <v-list-item v-for="etape in recette.etapes" :key="etape.id">
+              <v-list-item class="pr-md-0" v-for="etape in recette.etapes" :key="etape.id">
                 <v-list-item-content class="py-1">
-                    <v-layout row justify-space-around>
+                    <v-layout row justify-space-around class="mx-0">
                       <v-flex xs11 class="px-3">
-                        <v-text-field v-model="etape.texte" label="Description"></v-text-field>
+                        <v-textarea auto-grow rows="1" class="text-wrap" v-model="etape.texte" label="Description"></v-textarea>
                       </v-flex>
                       <v-flex xs1>
                         <Menu
@@ -126,12 +140,12 @@
       </v-flex>
     </v-layout>
     <v-layout row justify-space-around>
-      <v-flex xs6 md6 class="ma-3">
+      <v-flex xs10 md6 class="my-3">
         <div class="text-center">
           <v-btn
             text
             @click="enregistrer"
-            class="success text-h5 font-weight-bold"
+            class="success text-body-1 text-md-h5 font-weight-bold"
           >{{texteBoutonValider}}</v-btn>
         </div>
       </v-flex>
@@ -145,14 +159,15 @@ import Menu from "../components/ReordonnerMenu.vue";
 import all from "../fb";
 import firebase from "firebase/app";
 import "firebase/functions";
+import {categories} from '../outils';
 const auth = all.auth;
 const db = all.db;
 
-const recettes = all.db
+const recettes = db
   .collection("users")
   .doc(auth.currentUser.uid)
   .collection("recettes");
-const recherche = firebase.functions().httpsCallable("recette");
+const recherche = firebase.app().functions('europe-west1').httpsCallable("recette");
 export default {
   components: { Menu },
   data() {
@@ -160,11 +175,13 @@ export default {
       recette: {
         titre: "",
         ingredients: [{ nom: "", unite: "", qte: null,id:this.getRandomInt(10000) }],
-        etapes: [{ texte: "",id:this.getRandomInt(10000) }],
-        duree: null,
+        etapes: [{texte: "",id:this.getRandomInt(10000)}],
         quantite: 4,
         id: null,
+        public:true,
       },
+      categories,
+      erreur:false,
       url: "",
       rules: [
         (v) =>
@@ -199,7 +216,9 @@ export default {
       } else {
         let res = recettes.doc();
         this.recette.id = res.id;
+        
         res.set(this.recette).then(() => {
+          this.$store.commit("modifyCompteur",1);
           this.$store.commit("setMesRecettes", [this.recette]);
           this.$router.replace("/recette/" + res.id);
         });
@@ -219,8 +238,13 @@ export default {
               this.loading = false;
               this.url = "";
               this.texteBoutonValider = "Valider Modifications";
+              this.$store.commit("modifyCompteur",1);
             });
-        });
+        }).catch(()=>{
+              this.loading = false;
+              this.url = "";
+              this.erreur = true;
+            });
       }
     },
   },
@@ -251,7 +275,11 @@ export default {
               this.$router.push("/mesrecettes");
             });
     } 
-      
+    this.$nextTick(()=>{
+      let etapes = this.recette.etapes;
+      for(let i =0 ;i < etapes.length;i++)
+        this.recette.etapes[i].texte = etapes[i].texte;
+      })
   },
 };
 </script>

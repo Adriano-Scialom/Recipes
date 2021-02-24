@@ -15,7 +15,10 @@ let auth = firebase.auth();
 
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 let app;
-auth.onAuthStateChanged(()=>{
+auth.onAuthStateChanged((person)=>{
+  console.log(person);
+  
+  if(!person && app){app.$store.commit("deconnecter");}
   if(!app){
     app = new Vue({
       router,
@@ -23,10 +26,29 @@ auth.onAuthStateChanged(()=>{
       vuetify,
       render: h => h(App)
     }).$mount('#app')
+    if(person){
+      firebase.firestore().collection('users').doc(auth.currentUser.uid).get()
+      .then(snap=>{
+        let data = snap.data();
+        app.$store.commit('setColor',data.color);
+      });
+      firebase.firestore().collection("compteur").doc("compteur")
+      .get().then(snap=>{
+        let data = snap.data();
+        app.$store.commit('setCompteur',data.compte);
+      })
+    }
+  }
+  else{ if(person){
     firebase.firestore().collection('users').doc(auth.currentUser.uid).get()
     .then(snap=>{
       let data = snap.data();
       app.$store.commit('setColor',data.color);
+    });
+    firebase.firestore().collection("compteur").doc("compteur")
+    .get().then(snap=>{
+      let data = snap.data();
+      app.$store.commit('setCompteur',data.compte);
     })
-  }
+  }}
 })

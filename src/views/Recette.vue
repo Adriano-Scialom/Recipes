@@ -4,10 +4,12 @@
       <v-spacer></v-spacer>
       <div class="text-align-top text-right"><v-btn @click="imageZoomUrl=null" icon color="white"><v-icon>close_fullscreen</v-icon></v-btn></div>
       <v-spacer></v-spacer>
-      <div class="text-center text-align-center">
-          <v-img :src="imageZoomUrl" aspect-ratio="1" width=600 height=600 contain></v-img>
+      <div class="text-center text-align-center overlay">
+          <v-img :src="imageZoomUrl" aspect-ratio="1"  contain></v-img>
       </div>
     </v-overlay>
+    <v-snackbar top color="green" v-model="successUpdate">La recette a bien été ajoutée</v-snackbar>
+    <v-snackbar top color="red" v-model="failureUpdate">Il y a eu une erreur dans l'ajout de la recette</v-snackbar>
     <div class="gauche">
       <v-container class="px-5">
         <v-layout row wrap>
@@ -23,7 +25,9 @@
                   <v-flex xs10><v-slider :color="color" ticks="always" v-model="quantite" min="1" max="12"></v-slider></v-flex>
                   <v-flex xs1 class="pt-1 text-center">12</v-flex>
                 </v-layout>
+                
               </v-card-actions>
+              <v-layout class='pb-2' justify-space-around><v-btn class="text-center" text :color="color" @click="()=>{updateListe({id:recette.id,nombre:quantite,cuisinier: appartient ? auth.currentUser.uid : $route.params.idpersonne}).then(()=>{successUpdate=true}).catch(()=>{failureUpdate=true;})}">Ajouter recette à liste</v-btn></v-layout>
             </v-card>
           </v-flex>
         </v-layout>
@@ -59,6 +63,15 @@
                 </v-layout>
                 <v-select v-model="recette.categorie" :readonly="!appartient" :items="categories.map(categorie=>categorie.nom)" @change="()=>{enregistrerModificationRecette('categorie')}"  label="Catégories" 
                   :menu-props='{closeOnClick: true,closeOnContentClick: true,disableKeys:true,openOnClick: false,maxHeight:304,"offset-y":true}' ></v-select>  
+                <v-layout >
+                  <v-flex v-if="recette.dureePreparation" xs6>
+                    Durée de préparation :<div>{{recette.dureePreparation}}min</div>
+                  </v-flex>
+                  <v-flex v-if="recette.dureeCuisson" xs6>
+                    Durée de cuisson :<div>{{recette.dureeCuisson}}min</div>
+                  </v-flex>
+                </v-layout>
+              
               </v-card-text>
             </v-card>
           </v-flex>
@@ -76,7 +89,7 @@
                           <v-overlay v-if="hover" absolute z-index=1>
                             <v-btn icon color="white" @click="imageZoomUrl=image.url"><v-icon>zoom_in</v-icon></v-btn>
                           </v-overlay>
-                          <div class="text-right text-align-top" v-if="hover && appartient"><v-btn @click="()=>{supprimerImage(image)}" style="z-index:3;" color="white" small icon><v-icon>delete</v-icon></v-btn></div>
+                          <div class="text-right text-align-top" v-if="hover && (appartient || image.photographe == auth.currentUser.uid)"><v-btn @click="()=>{supprimerImage(image)}" style="z-index:3;" color="white" small icon><v-icon>delete</v-icon></v-btn></div>
                         </v-img>
                       </template>
                     </v-hover>
@@ -85,8 +98,7 @@
               </v-card-text>
               <v-card-actions>
                 <input hidden type="file" v-on:change="inputChange" ref="inputAjoutPhoto" accept="image/*">
-                
-                <v-btn text v-if="appartient" :color="color" @click="ajoutPhoto">Ajouter photo <v-icon right>add_a_photo</v-icon></v-btn>
+                <v-btn text :color="color" @click="ajoutPhoto">Ajouter photo <v-icon right>add_a_photo</v-icon></v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -94,11 +106,11 @@
       </v-container>
     </div>
     <div class="titre">
-      <v-container class="px-5">
+      <v-container class="px-5 pb-1">
         <v-layout row justify-space-around>
           <v-flex xs12>
             <v-card>
-              <v-card-title :class="[color+'--text','py-0','text-h6','text-md-h4','text-center','text-capitalize']"><span class="text-center">{{recette.titre}}</span></v-card-title>
+              <v-card-title :class="[color+'--text','py-1','text-h6','text-md-h4','text-center']"><span class="text-center">{{recette.titre}}</span></v-card-title>
             </v-card>
           </v-flex>
         </v-layout>
@@ -112,18 +124,18 @@
               <v-card-title :class="['ml-2','text-h5',color+'--text']">Ingrédients</v-card-title>
               <v-divider></v-divider>
               <v-list>
-                <v-list-item v-for="ingredient in recette.ingredients" :key="ingredient.id">
-                  <v-list-item-content>
-                    <div :class="['text-body-1',color+'--text','text--darken-3']">
+                <v-list-item  v-for="ingredient in recette.ingredients" :key="ingredient.id">
+                  <v-list-item-title class="">
+                    <div :class="['py-0','text-body-1',color+'--text','text--darken-3']">
                       <span v-if="ingredient.qte && ingredient.qte>0">
                         {{Math.round(100*ingredient.qte*quantite/recette.quantite)/100}} {{ingredient.unite}}
                         <span
                           v-if="ingredient.unite"
-                        >de </span>
+                        >{{'aeiouh'.includes(ingredient.nom[0].toLowerCase()) ? " d'": ' de '}}</span>
                       </span>
                       <span class="text-capitalize">{{ingredient.nom}}</span>
                     </div>
-                  </v-list-item-content>
+                  </v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -193,6 +205,9 @@
 </template>
 
 <style scoped>
+.v-list-item{
+  min-height: 32px;
+}
 div.contain {
   display: grid;
   grid-template-columns: auto;
@@ -204,6 +219,7 @@ div.titre{
   grid-column: 1/2;
   grid-row: 1/2;
   padding: 5px;
+  padding-bottom: 0px;
 }
 div.gauche {
   grid-column: 1/2;
@@ -216,6 +232,10 @@ div.droite {
   grid-row: 3/4;
   padding: 5px;
   padding-top:0px;
+}
+.overlay{
+  width:min(75vw,75vh,600px);
+  aspect-ratio: 1/1;
 }
 @media screen and (min-width:700px) {
   div.contain {
@@ -240,7 +260,7 @@ div.droite {
 div.titre{
   grid-column: 2/3;
   grid-row: 1/2;
-  padding: 2px 10px;
+  padding: 10px 10px 0px 10px;
 }
 }
 </style>
@@ -252,7 +272,8 @@ const db = all.db;
 import firebase, { storage } from 'firebase/app';
 import 'firebase/storage';
 import {compression,categories} from '../outils';
-
+import "firebase/functions";
+const updateListe = firebase.app().functions('europe-west1').httpsCallable("updateListe");
 export default {
   data() {
     return {
@@ -262,7 +283,10 @@ export default {
       quantite: 0,
       imageZoomUrl:null,
       categories:categories,
-      
+      updateListe,
+      successUpdate:false,
+      failureUpdate:false,
+      auth,
     }
   },
   computed:{
@@ -301,7 +325,7 @@ export default {
       if(!this.recette.notes || this.recette.notes.length==0){return 0}
       if(this.appartient){return this.maNote;}
       let note = this.recette.notes.find(note=>note.id==this.$route.params.idpersonne);
-      return note.valeur;
+      return note ? note.valeur:0;
     }
   },
   watch:{
@@ -310,9 +334,6 @@ export default {
   methods: {
     modifier() {
       this.$router.push("/modifier/" + this.recette.id);
-    },
-    changerNote(){
-      
     },
     changerNoteMoyenne(){
       var dbdoc;
@@ -364,16 +385,19 @@ export default {
     },
     inputChange(e){
       let fichier = e.target.files[0];
+      console.log(fichier);
       compression(fichier,this.enregistrerImage);
     },
     enregistrerImage(fichier){
       let nomFichier = fichier.name.split(".")[0]+new Date().getTime().toString()+"."+fichier.name.split(".")[1];
+      console.log(fichier);
+      console.log(nomFichier);
       let ref = firebase.storage().ref(auth.currentUser.uid+"/"+this.recette.id+"/"+nomFichier);
       ref.put(fichier)
       .then(()=>{
         ref.getDownloadURL().then(url=>{
-          if(this.recette.images){this.recette.images.push({url:url})}
-        else{this.recette.images = [{url:url}]}
+          if(this.recette.images){this.recette.images.push({url:url,photographe:auth.currentUser.uid})}
+        else{this.recette.images = [{url:url,photographe:auth.currentUser.uid}]}
         this.$forceUpdate();
         db.collection("users").doc(auth.currentUser.uid)
         .collection("recettes").doc(this.recette.id)

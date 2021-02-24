@@ -4,7 +4,7 @@
             <v-flex xs12 md4 v-for="personne in personnes" :key="personne.id">
                 <v-card class="ma-2">
                     
-                    <v-card-title class="info--text text-capitalize">{{personne.nom}} {{personne.prenom}}</v-card-title>
+                    <v-card-title :class="[color+'--text','text-capitalize']">{{personne.nom}} {{personne.prenom}}</v-card-title>
                     <v-img v-if="personne.imageURL" aspect-ratio="1.3" :src="personne.imageURL"></v-img>
                     <v-card-actions><v-btn text :color="color" router :to="personne.id==auth.currentUser.uid ? '/mesrecettes' : `/voir/${personne.id}`">Accéder aux recettes</v-btn></v-card-actions>
                 </v-card>

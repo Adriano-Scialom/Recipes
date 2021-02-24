@@ -1,7 +1,7 @@
 <template>
-  <v-container class="ma-5">
-    <v-layout row justify-space-around>
-      <v-flex xs10 md6>
+  <v-container class="px-0">
+    <v-layout class="mx-0 mt-4" row justify-space-around>
+      <v-flex xs10 md8>
         
           <v-card class="pa-5 pt-1">
             <v-card-title :class="[color+'--text','text-center','text-h4']">Connexion</v-card-title>
@@ -26,16 +26,19 @@
 
                 <v-card-actions>
                   <v-layout row justify-space-around wrap>
-                    <v-flex xs8 md4>
-                      <v-btn  @click="connexion"  class="align-center">
+                    
+                    <v-flex xs8 md4 text-center>
+                      <v-btn text @click="connexion"  class="align-center text-center">
                         <v-icon left>login</v-icon>
                         <div>Connexion</div>
                       </v-btn>
                     </v-flex>
-                    <v-flex xs8 md4>
-                      <v-btn router to="/oublie"><v-icon left>mood_bad</v-icon>Mot de passe oublié ?
+                    
+                    <v-flex text-center class="mt-4 mt-md-0" xs10 md6>
+                      <v-btn text router to="/oublie"><v-icon left>mood_bad</v-icon>Mot de passe oublié ?
                       </v-btn>
                     </v-flex>
+                   
                   </v-layout>
                 </v-card-actions>
           </v-card>
@@ -77,7 +80,7 @@ export default {
       .then(credentials=>{
       this.$store.commit('setUid',credentials.user.uid);
       this.$router.push('/mesrecettes')
-      }).catch(()=>this.snackOpen=true)
+      }).catch((err)=>{this.snackOpen=true;console.log(err);})
     },
   },
 };
@@ -85,7 +88,5 @@ export default {
 </script>
 
 <style scoped>
-.body {
-  background-color: green;
-}
+
 </style>

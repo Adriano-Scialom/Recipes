@@ -8,31 +8,28 @@
     <v-layout class="mt-5" row justify-space-around>
       <v-flex xs10>
         <v-card>
-          <v-list>
-            <v-list-item
-              v-for="recette in recettes"
-              :key="recette.id"
-              router
-              :to="!recette.cuisinier ?'/recette/'+recette.id:'/piqueurderecette/'+recette.cuisinier+'/'+recette.id"
-              two-line
-            >
-            <v-list-item-avatar v-if="recette.images && recette.images.length>0" size=60><v-img :src="recette.images[0].url" big></v-img></v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-layout row class="mx-0">
-                  <v-flex class="xs-8">
-                  <span class="text-wrap">{{recette.titre}}</span>
-                  </v-flex>
-                  <v-flex class="xs-4">
-                  <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" readonly dense :value="recette.noteMoyenne"></v-rating></span>
-                  </v-flex>
-                  </v-layout>
-                </v-list-item-title>
-                <v-list-item-subtitle v-if="recette.cuisinier && recette.prenom">{{recette.prenom}}</v-list-item-subtitle>
-                
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <v-card-text>
+            <v-list>
+              <v-list-item class="px-2" v-for="recette in recettes" :key="recette.id" router
+                :to="!recette.cuisinier ?'/recette/'+recette.id:'/piqueurderecette/'+recette.cuisinier+'/'+recette.id" two-line>
+              <v-list-item-avatar v-if="recette.images && recette.images.length>0" size=60><v-img :src="recette.images[0].url" big></v-img></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <v-layout row class="mx-0">
+                    <v-flex class="xs-8">
+                    <span class="text-wrap">{{recette.titre}}</span>
+                    </v-flex>
+                    <v-flex class="xs-4">
+                    <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" half-increments readonly dense :value="recette.noteMoyenne"></v-rating></span>
+                    </v-flex>
+                    </v-layout>
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="recette.cuisinier && recette.prenom">{{recette.prenom}}</v-list-item-subtitle>
+                  
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -54,7 +51,7 @@ export default {
     color(){return this.$store.getters.color},
     recettes() {
       let categorie = this.$route.params.type.charAt(0).toUpperCase() + this.$route.params.type.slice(1)
-      return (this.$store.state.mesRecettes+this.$store.state.autresRecettes).filter(recette=>recette.categorie && recette.categorie == categorie);
+      return (this.$store.state.mesRecettes.concat(this.$store.state.autresRecettes)).filter(recette=>recette.categorie && recette.categorie == categorie);
     },
    
   },

@@ -17,10 +17,10 @@
           @click="toggle"
         />
         </a>
-        <a> <span @click="to_presentation" color="white" class="text-md-h5 white--text text-xs-subtitle-1">Les carnets d'Adriano</span><span class="white--text subtitle">.whatakif</span></a>
+        <a> <span @click="to_presentation" color="white" class="text-md-h5 white--text text-xs-subtitle-1">Les carnets d'Adriano</span></a>
       </div>
-
-      <v-spacer></v-spacer>
+      
+      <div class="compteur text-caption text-md-body-1">comptent {{nombreDeRecettes}} recettes</div>
     </v-app-bar>
     <Drawer/>    
     
@@ -42,11 +42,12 @@ export default {
 
   data(){
     return{
-    
+     
     }
   },
   computed:{
     color(){return this.$store.getters.color},
+    nombreDeRecettes(){return this.$store.getters.compteur;}
   },
   methods:{
     toggle(){
@@ -63,5 +64,9 @@ export default {
 <style  scoped>
 .v-main{
   background-color: cyan;
+}
+.compteur{
+  margin-top:5px;
+  margin-left: min(10px,5%);
 }
 </style>

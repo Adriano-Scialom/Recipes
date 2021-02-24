@@ -26,6 +26,7 @@ export default {
                     {text:"Nouvelle recette",route:'/nouvelle',icon:'plus_one'},
                     {text:"Mes recettes",route:"/mesrecettes",icon:"food_bank"},
                     {text:'Cuisiniers',route:'/murs',icon:'people'},
+                    {text:'Liste de course',route:'/listedecourses',icon:'list'},
                     ],
             
         }

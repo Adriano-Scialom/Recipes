@@ -4,7 +4,7 @@
             <v-card-title :class="[color+'--text','text-h6']">Recettes recentes</v-card-title>
             <v-card-text>
                 <v-list>
-                    <v-list-item class="px-0" router :to="recette.cuisinier==uid ? '/recette/'+recette.id: '/piqueurderecette/'+recette.cuisinier+'/'+recette.id" v-for="recette in recettes" :key="recette.id">
+                    <v-list-item class="px-2" router :to="recette.cuisinier==uid ? '/recette/'+recette.id: '/piqueurderecette/'+recette.cuisinier+'/'+recette.id" v-for="recette in recettes" :key="recette.id">
                         <v-list-item-avatar v-if="recette.images && recette.images.length>0" size=60><v-img :src="recette.images[0].url" big></v-img></v-list-item-avatar>
                         <v-list-item-content>
                         <v-list-item-title class="text-wrap">{{recette.titre}}</v-list-item-title>

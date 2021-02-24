@@ -30,7 +30,7 @@
                       <span class="text-wrap"> {{recette.titre}}</span>
                       </v-flex>
                       <v-flex class="xs-4">
-                      <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" readonly dense :value="recette.noteMoyenne"></v-rating></span>
+                      <span class="text-right" v-if="recette.noteMoyenne"><v-rating color="yellow accent-3" half-increments readonly dense :value="recette.noteMoyenne"></v-rating></span>
                       </v-flex>
                       </v-layout>
                     </v-list-item-title>
@@ -80,6 +80,7 @@ export default {
       .collection("recettes").doc(this.recetteDialog.id).delete();
       this.$store.commit('supprimerMaRecette',this.recetteDialog);
       this.dialog = false;
+      this.$store.commit('modifyCompteur',-1);
     }
   },
   computed: {

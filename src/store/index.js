@@ -10,7 +10,8 @@ export default new Vuex.Store({
     mesRecettes:[],
     autresRecettes:[],
     personnes:[],
-    color:"blue"
+    color:"blue",
+    compteur:0,
   },
   mutations: {
     setColor:(state,color)=>{state.color=(color || 'blue');},
@@ -49,7 +50,9 @@ export default new Vuex.Store({
         state.personnes.push(person);
       }
     },
-
+    setCompteur:(state,compte)=>{state.compteur = compte;},
+    modifyCompteur:(state,change)=>{state.compteur += change;},
+    deconnecter:(state)=>{state.uid="";state.mesRecettes=[];state.autresRecettes=[];}
   },
   actions: {
   },
@@ -57,7 +60,8 @@ export default new Vuex.Store({
     uid(state){return state.uid},
     recettes(state){return state.mesRecettes},
     color(state){return state.color},
-    getPerson(state){return (id)=>{return state.personnes.find((personne)=>{return personne.id===id;});}}
+    getPerson(state){return (id)=>{return state.personnes.find((personne)=>{return personne.id===id;});}},
+    compteur(state){return state.compteur;},
   },
   modules: {
   }
