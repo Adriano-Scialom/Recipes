@@ -167,9 +167,10 @@
                   <v-list-item-content>
                     <v-layout class="mx-0" row justify-space-between>
                     <v-flex xs4 md2 class="text-body-2 text-md-body-1 pr-1">{{commentaire.prenom}} </v-flex>
-                    <v-flex xs8 md10>
+                    <v-flex xs7 md9>
                     <span :class="['text-body-2','text-md-body-1',color+'--text','text--darken-3']">{{commentaire.texte}}</span>
                     </v-flex>
+                    <v-flex xs1><v-btn v-if="commentaire.uid && commentaire.uid == auth.currentUser.uid" icon @click="()=>supprimerCommentaire(commentaire)"><v-icon>delete</v-icon></v-btn></v-flex>
                     </v-layout>
                   </v-list-item-content>
                 </v-list-item>
@@ -274,6 +275,11 @@ import 'firebase/storage';
 import {compression,categories} from '../outils';
 import "firebase/functions";
 const updateListe = firebase.app().functions('europe-west1').httpsCallable("updateListe");
+let funct = firebase.app().functions('europe-west1')
+funct.useFunctionsEmulator("http://localhost:5000");
+const mail = funct.httpsCallable("mail");
+
+//mail.useFunctionsEmulator('http://localhost:5000');
 export default {
   data() {
     return {
@@ -362,6 +368,10 @@ export default {
       this.enregistrerModificationRecette('images');
       storage().refFromURL(image.url).delete();
     },
+    supprimerCommentaire(commentaire){
+      this.recette.commentaires.splice(this.recette.commentaires.indexOf(commentaire),1);
+      this.enregistrerModificationRecette('commentaires');
+    },
     envoyerCommentaire(){
       this.envoieCommentaireEnabled = false;
       setTimeout(()=>{this.envoieCommentaireEnabled=true},6000);
@@ -370,10 +380,13 @@ export default {
       .get().then(data=>{
         let prenom = data.data().prenom;
         let imageURL = data.data().imageURL;
-        let commentaire = {texte:this.monCommentaire,prenom,imageURL};
+        let commentaire = {texte:this.monCommentaire,prenom,imageURL,uid:auth.currentUser.uid};
         if (this.recette.commentaires){this.$set(this.recette.commentaires,this.recette.commentaires.length,commentaire);}
         else{this.recette.commentaires=[commentaire];}
         this.enregistrerModificationRecette("commentaires");
+        
+        if(!this.appartient)
+            mail({commentateur:prenom,nom_cuisinier:this.recette.prenom,id_cuisinier:this.recette.cuisinier,id_recette:this.recette.id,nom_recette:this.recette.titre})
         this.envoieCommentaireEnabled = true;
         this.monCommentaire = "";
       })
