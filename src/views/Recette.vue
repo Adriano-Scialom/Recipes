@@ -276,10 +276,9 @@ import {compression,categories} from '../outils';
 import "firebase/functions";
 const updateListe = firebase.app().functions('europe-west1').httpsCallable("updateListe");
 let funct = firebase.app().functions('europe-west1')
-funct.useFunctionsEmulator("http://localhost:5000");
+//funct.useFunctionsEmulator("http://localhost:5000");
 const mail = funct.httpsCallable("mail");
 
-//mail.useFunctionsEmulator('http://localhost:5000');
 export default {
   data() {
     return {
@@ -298,6 +297,7 @@ export default {
   computed:{
     color(){return this.$store.getters.color},
     appartient(){return this.$route.name=='Recette'},
+    uid_recette(){if(this.appartient) return auth.currentUser.uid; else return this.$route.params.idpersonne},
     noteMoyenne(){
       if(!this.recette.notes || this.recette.notes.length==0){return 0}
       else{
@@ -342,14 +342,8 @@ export default {
       this.$router.push("/modifier/" + this.recette.id);
     },
     changerNoteMoyenne(){
-      var dbdoc;
-      if(this.appartient){
-        dbdoc = db.collection("users").doc(auth.currentUser.uid)
-        .collection("recettes").doc(this.recette.id)}
-      else{
-        dbdoc = db.collection("users").doc(this.$route.params.idpersonne)
-        .collection("recettes").doc(this.recette.id);}
-        
+      let dbdoc = db.collection("users").doc(this.uid_recette)
+        .collection("recettes").doc(this.recette.id)
       dbdoc.update({noteMoyenne:this.noteMoyenne}) 
     },
     copier() {
@@ -403,29 +397,21 @@ export default {
     },
     enregistrerImage(fichier){
       let nomFichier = fichier.name.split(".")[0]+new Date().getTime().toString()+"."+fichier.name.split(".")[1];
-      console.log(fichier);
-      console.log(nomFichier);
-      let ref = firebase.storage().ref(auth.currentUser.uid+"/"+this.recette.id+"/"+nomFichier);
+      let ref = firebase.storage().ref(this.uid_recette+"/"+this.recette.id+"/"+nomFichier);
       ref.put(fichier)
       .then(()=>{
         ref.getDownloadURL().then(url=>{
           if(this.recette.images){this.recette.images.push({url:url,photographe:auth.currentUser.uid})}
         else{this.recette.images = [{url:url,photographe:auth.currentUser.uid}]}
         this.$forceUpdate();
-        db.collection("users").doc(auth.currentUser.uid)
-        .collection("recettes").doc(this.recette.id)
-        .update({images:this.recette.images});
+        this.enregistrerModificationRecette("images");
         })  
         })   
       },
       enregistrerModificationRecette(field){
         var dbdoc;
-        if(this.appartient){
-          dbdoc = db.collection("users").doc(auth.currentUser.uid)
-        .collection("recettes").doc(this.recette.id)}
-        else{
-          dbdoc = db.collection("users").doc(this.$route.params.idpersonne)
-        .collection("recettes").doc(this.recette.id);}
+        dbdoc = db.collection("users").doc(this.uid_recette)
+        .collection("recettes").doc(this.recette.id);
         if(field){
           let obj = {};
           obj[field] = this.recette[field];
