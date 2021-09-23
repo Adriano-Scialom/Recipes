@@ -51,7 +51,7 @@ export default {
     color(){return this.$store.getters.color},
     recettes() {
       let categorie = this.$route.params.type.charAt(0).toUpperCase() + this.$route.params.type.slice(1)
-      return (this.$store.state.mesRecettes.concat(this.$store.state.autresRecettes)).filter(recette=>recette.categorie && recette.categorie == categorie);
+      return (this.$store.state.mesRecettes.concat(this.$store.state.autresRecettes)).filter(recette=>recette.categorie && recette.categorie == categorie).sort((a,b)=>(a.titre>=b.titre) ? 1 : -1);
     },
    
   },
