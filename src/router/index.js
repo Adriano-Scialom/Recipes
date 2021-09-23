@@ -11,6 +11,7 @@ import Voir from '../views/Voir.vue';
 import ListeCategorie from '../views/ListeCategorie.vue';
 import Recents from '../views/Recents.vue';
 import Courses from '../views/Courses.vue';
+import Search from '../views/Search.vue';
 import all from '../fb';
 
 Vue.use(VueRouter)
@@ -94,6 +95,11 @@ Vue.use(VueRouter)
     path:'/listedecourses',
     name:'Courses',
     component:Courses
+  },
+  {
+    path:'/search',
+    name:'Search',
+    component:Search
   },
 ]
 const scroll = (from, to, _)=>{

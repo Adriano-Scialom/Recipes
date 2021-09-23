@@ -6,7 +6,9 @@ import vuetify from './plugins/vuetify';
 import firebase from 'firebase/app';
 import 'firebase/firebase-firestore';
 import 'firebase/auth';
+import InstantSearch from 'vue-instantsearch';
 
+Vue.use(InstantSearch);
 Vue.config.productionTip = false
 
 
